@@ -24,6 +24,7 @@ ColumnLayout {
     property color colorTx: root.useCustomColors && cfg.colorTx || Color.mSecondary
     property color colorRx: root.useCustomColors && cfg.colorRx || Color.mPrimary
     property color colorText: root.useCustomColors && cfg.colorText || Qt.alpha(Color.mOnSurfaceVariant, 0.3)
+    property color colorBackground: root.useCustomColors && cfg.colorBackground || Style.capsuleColor
 
     property int byteThresholdActive: cfg.byteThresholdActive || defaults.byteThresholdActive
     property real fontSizeModifier: cfg.fontSizeModifier || defaults.fontSizeModifier
@@ -257,6 +258,18 @@ ColumnLayout {
                 onColorSelected: color => root.colorText = color
             }
         }
+
+        RowLayout {
+            NLabel {
+                label: pluginApi?.tr("settings.colorBackground.label")
+                description: pluginApi?.tr("settings.colorBackground.desc")
+            }
+
+            NColorPicker {
+                selectedColor: root.colorBackground
+                onColorSelected: color => root.colorBackground = color
+            }
+        }
     }
 
     // ---------- Saving ----------
@@ -283,6 +296,7 @@ ColumnLayout {
             pluginApi.pluginSettings.colorTx = root.colorTx.toString();
             pluginApi.pluginSettings.colorRx = root.colorRx.toString();
             pluginApi.pluginSettings.colorText = root.colorText.toString();
+            pluginApi.pluginSettings.colorBackground = root.colorBackground.toString();
         }
 
         pluginApi.saveSettings();

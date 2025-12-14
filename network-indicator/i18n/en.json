@@ -51,6 +51,10 @@
         "colorText": {
             "label": "Text",
             "desc": "Set the text color used for both RX and TX values."
+        },
+        "colorBackground": {
+            "label": "Background",
+            "desc": "Set the background color for the widget."
         }
     }
 }

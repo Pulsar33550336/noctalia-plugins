@@ -41,9 +41,11 @@ Rectangle {
     property bool barIsSpacious: barDensity != "mini"
     property bool barIsVertical: barPosition === "left" || barPosition === "right"
 
-    color: cfg.backgroundColor || defaults.backgroundColor || "transparent"
-    implicitWidth: barIsVertical ? Style.barHeight : Math.max(contentRow.implicitWidth, minWidth)
-    implicitHeight: Style.barHeight
+    color: root.useCustomColors && cfg.colorBackground || Style.capsuleColor
+    radius: Style.radiusM
+
+    implicitWidth: barIsVertical ? Style.capsuleHeight : Math.max(contentRow.implicitWidth, minWidth)
+    implicitHeight: barIsVertical ? Math.round(contentRow.implicitHeight + Style.marginM * 2) : Style.capsuleHeight
 
     // ---------- Widget ----------
 
