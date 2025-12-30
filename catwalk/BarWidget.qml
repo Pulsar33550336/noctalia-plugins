@@ -71,6 +71,16 @@ Rectangle {
 
     readonly property real cpuUsage: root.pluginApi?.mainInstance?.cpuUsage ?? 0
     
+    function openPanel() {
+        Tooltip
+        if (pluginApi) {
+            var result = pluginApi.openPanel(root.screen);
+            Logger.i("Catwalk", "OpenPanel result:", result);
+        } else {
+            Logger.e("Catwalk", "PluginAPI is null");
+        }
+    }
+    
     function openExternalMonitor() {
       Quickshell.execDetached(["sh", "-c", Settings.data.systemMonitor.externalMonitor]);
     }
@@ -166,23 +176,17 @@ Rectangle {
             if (!root.enabled && !root.allowClickWhenDisabled) {
                 return;
             }
+            // Open Panel on left/right click
+            // Open external monitor on middle click
             if (mouse.button === Qt.LeftButton) {
-                // Open Panel on click
-                if (pluginApi) {
-                    var result = pluginApi.openPanel(root.screen);
-                    Logger.i("Catwalk", "OpenPanel result:", result);
-                } else {
-                    Logger.e("Catwalk", "PluginAPI is null");
-                }
+                root.openPanel();
                 root.clicked();
-            } else {
-                TooltipService.hide();
+            } else if (mouse.button === Qt.RightButton) {
+                root.openPanel();
+                root.rightClicked();
+            } else if (mouse.button === Qt.MiddleButton) {
                 root.openExternalMonitor();
-                if (mouse.button === Qt.RightButton) {
-                    root.rightClicked();
-                } else if (mouse.button === Qt.MiddleButton) {
-                    root.middleClicked();
-                }
+                root.middleClicked();
             }
         }
         onWheel: wheel => root.wheel(wheel.angleDelta.y)
