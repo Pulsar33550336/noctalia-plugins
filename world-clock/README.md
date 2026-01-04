@@ -21,18 +21,23 @@ A Noctalia Shell plugin to display time from multiple timezones around the world
 ## Available Cities
 
 ### Americas
+
 New York, Los Angeles, Chicago, São Paulo, Mexico City, Buenos Aires, Toronto, Vancouver, Lima, Bogotá
 
 ### Europe
+
 London, Paris, Berlin, Madrid, Rome, Moscow, Amsterdam, Stockholm, Istanbul, Athens
 
 ### Asia
+
 Tokyo, Shanghai, Dubai, Singapore, Hong Kong, Mumbai, Bangkok, Seoul, Jakarta, Manila
 
 ### Oceania
+
 Sydney, Melbourne, Auckland, Brisbane
 
 ### Africa
+
 Cairo, Johannesburg, Lagos, Nairobi
 
 ## Supported Languages
@@ -58,6 +63,7 @@ Cairo, Johannesburg, Lagos, Nairobi
 4. Click Install
 
 Or manually:
+
 ```bash
 git clone https://github.com/noctalia-dev/noctalia-plugins.git
 cd noctalia-plugins/world-clock
@@ -71,7 +77,7 @@ cd noctalia-plugins/world-clock
 3. **Add timezones**: Click the `+` button to add a timezone (max 5)
 4. **Select cities**: Choose from 38 available cities using the dropdown
 5. **Toggle timezones**: Use the toggle switch to enable/disable specific timezones
-6. **Adjust settings**: 
+6. **Adjust settings**:
    - Set rotation interval (how long each timezone is displayed)
    - Choose time format (24h or 12h, with or without seconds)
 
@@ -110,10 +116,13 @@ cd noctalia-plugins/world-clock
 ## Screenshots
 
 ### Bar Widget
+
 The widget displays the current city name and time, rotating through enabled timezones.
 
 ### Configuration Panel
+
 Full-featured panel with:
+
 - Display settings (rotation interval, time format)
 - Timezone list with toggle, city selector, and delete button
 - Visual feedback for enabled/disabled timezones
@@ -171,13 +180,14 @@ MIT License - see [LICENSE](../LICENSE) file for details
 
 ## Credits
 
-- **Author**: Noctalia Community
+- **Author**: Lokize
 - **Repository**: https://github.com/noctalia-dev/noctalia-plugins
 - **Noctalia Shell**: https://noctalia.dev
 
 ## Changelog
 
 ### v1.0.0 (2026-01-04)
+
 - Initial release
 - Support for 38 cities worldwide
 - 12 language translations
