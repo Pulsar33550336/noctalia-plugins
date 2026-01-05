@@ -7,11 +7,10 @@
       "version": "1.1.3",
       "author": "MannuVilasara",
       "description": "A cute animated cat for your bar.",
-      "tags": ["Bar", "Desktop", "Panel", "Fun"],
       "repository": "https://github.com/noctalia-dev/noctalia-plugins",
       "minNoctaliaVersion": "3.6.0",
       "license": "MIT",
-      "lastUpdated": "2026-01-04T14:34:51-05:00"
+      "lastUpdated": "2026-01-04T21:11:31-05:00"
     },
     {
       "id": "fancy-audiovisualizer",
@@ -19,11 +18,10 @@
       "version": "1.0.7",
       "author": "Noctalia Team",
       "description": "Lemmy's fancy circular audio visualizer.",
-      "tags": ["Desktop", "Audio"],
       "repository": "https://github.com/noctalia-dev/noctalia-plugins",
       "minNoctaliaVersion": "3.7.2",
       "license": "MIT",
-      "lastUpdated": "2026-01-02T19:48:38-05:00"
+      "lastUpdated": "2026-01-04T21:11:31-05:00"
     },
     {
       "id": "hello-world",
@@ -31,11 +29,10 @@
       "version": "1.0.5",
       "author": "Noctalia Team <team@noctalia.dev>",
       "description": "A simple Hello World plugin demonstrating functionalities.",
-      "tags": ["Bar", "Desktop", "Panel"],
       "repository": "https://github.com/noctalia-dev/noctalia-plugins",
       "minNoctaliaVersion": "3.6.0",
       "license": "MIT",
-      "lastUpdated": "2026-01-04T14:00:40-05:00"
+      "lastUpdated": "2026-01-04T21:11:31-05:00"
     },
     {
       "id": "kaomoji-provider",
@@ -43,11 +40,10 @@
       "version": "1.0.2",
       "author": "Noctalia Team",
       "description": "Browse and search kaomoji emoticons from the launcher",
-      "tags": ["Launcher", "Fun"],
       "repository": "https://github.com/noctalia-dev/noctalia-plugins",
       "minNoctaliaVersion": "3.9.0",
       "license": "MIT",
-      "lastUpdated": "2026-01-04T20:31:33-05:00"
+      "lastUpdated": "2026-01-04T21:11:31-05:00"
     },
     {
       "id": "mangowc-layout-switcher",
@@ -55,11 +51,10 @@
       "version": "1.1.2",
       "author": "atheeq-rhxn",
       "description": "Switch between different mangowc layouts",
-      "tags": ["Bar", "Panel", "Gaming"],
       "repository": "https://github.com/noctalia-dev/noctalia-plugins",
       "minNoctaliaVersion": "3.6.0",
       "license": "MIT",
-      "lastUpdated": "2026-01-04T14:00:40-05:00"
+      "lastUpdated": "2026-01-04T21:11:31-05:00"
     },
     {
       "id": "mini-docker",
@@ -67,11 +62,10 @@
       "version": "2.1.1",
       "author": "MannuVilasara",
       "description": "Manage Docker containers, images, volumes & networks",
-      "tags": ["Bar", "Panel", "Development"],
       "repository": "https://github.com/noctalia-dev/noctalia-plugins",
       "minNoctaliaVersion": "3.6.0",
       "license": "MIT",
-      "lastUpdated": "2026-01-04T14:00:40-05:00"
+      "lastUpdated": "2026-01-04T21:11:31-05:00"
     },
     {
       "id": "network-indicator",
@@ -79,11 +73,10 @@
       "version": "1.0.2",
       "author": "tonigineer",
       "description": "A `lively` network traffic indicator.",
-      "tags": ["Bar", "Network", "Indicator"],
       "repository": "https://github.com/noctalia-dev/noctalia-plugins",
       "minNoctaliaVersion": "3.7.5",
       "license": "MIT",
-      "lastUpdated": "2025-12-26T23:47:22+01:00"
+      "lastUpdated": "2026-01-04T21:11:31-05:00"
     },
     {
       "id": "noctalia-supergfxctl",
@@ -91,11 +84,10 @@
       "version": "0.0.2",
       "author": "cod3d <cod3ddot@proton.me>",
       "description": "GPU control with supergfxctl for noctalia.",
-      "tags": ["Bar", "Panel", "System", "Gaming"],
       "repository": "https://github.com/cod3ddot/noctalia-supergfxctl",
       "minNoctaliaVersion": "3.7.5",
       "license": "AGPL-3.0-or-later",
-      "lastUpdated": "2026-01-04T14:00:40-05:00"
+      "lastUpdated": "2026-01-04T21:11:31-05:00"
     },
     {
       "id": "privacy-indicator",
@@ -103,11 +95,10 @@
       "version": "1.0.10",
       "author": "Noctalia Team <team@noctalia.dev>",
       "description": "A privacy indicator widget that shows when microphone, camera or screen sharing is active.",
-      "tags": ["Bar", "Privacy", "Indicator"],
       "repository": "https://github.com/noctalia-dev/noctalia-plugins",
       "minNoctaliaVersion": "3.6.0",
       "license": "MIT",
-      "lastUpdated": "2025-12-17T16:37:25+01:00"
+      "lastUpdated": "2026-01-04T21:11:31-05:00"
     },
     {
       "id": "simple-notes",
@@ -115,11 +106,10 @@
       "version": "1.0.1",
       "author": "fusuyfusuy",
       "description": "A simple note taking plugin for Noctalia Shell.",
-      "tags": ["Bar", "Panel", "Productivity"],
       "repository": "",
       "minNoctaliaVersion": "3.7.1",
       "license": "MIT",
-      "lastUpdated": "2026-01-04T14:00:40-05:00"
+      "lastUpdated": "2026-01-04T21:11:31-05:00"
     },
     {
       "id": "todo",
@@ -127,11 +117,10 @@
       "version": "1.4.1",
       "author": "lonerOrz <lonerOrz@qq.com>",
       "description": "A simple todo list manager plugin for Noctalia Shell.",
-      "tags": ["Bar", "Desktop", "Panel", "Productivity"],
       "repository": "https://github.com/noctalia-dev/noctalia-plugins",
       "minNoctaliaVersion": "3.7.1",
       "license": "MIT",
-      "lastUpdated": "2026-01-04T14:00:40-05:00"
+      "lastUpdated": "2026-01-04T21:11:31-05:00"
     },
     {
       "id": "update-count",
@@ -139,11 +128,10 @@
       "version": "1.0.7",
       "author": "BukoMoon",
       "description": "Checks for system updates and shows the update count. Click to run update command in a terminal.",
-      "tags": ["Bar", "System"],
       "repository": "https://github.com/noctalia-dev/noctalia-plugins",
       "minNoctaliaVersion": "3.6.0",
       "license": "GPLv3",
-      "lastUpdated": "2025-12-29T20:43:28-05:00"
+      "lastUpdated": "2026-01-04T21:11:31-05:00"
     }
   ]
 }
