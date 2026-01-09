@@ -213,7 +213,7 @@ Item {
         Canvas {
           id: progressRing
           anchors.centerIn: parent
-          width: Math.min(parent.width, parent.height) * 0.9
+          width: Math.min(parent.width, parent.height) * 1.0
           height: width
           visible: !isStopwatchMode && totalSeconds > 0
           z: -1

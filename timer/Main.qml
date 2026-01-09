@@ -3,11 +3,47 @@ import Quickshell
 import qs.Commons
 import qs.Services.System
 import qs.Services.UI
+import Quickshell.Io
 
 Item {
   id: root
 
   property var pluginApi: null
+
+  IpcHandler {
+    target: "plugin:timer"
+    
+    function toggle() {
+      if (pluginApi) {
+        pluginApi.withCurrentScreen(screen => {
+          pluginApi.togglePanel(screen);
+        });
+      }
+    }
+
+    function start(duration_str: string) {
+      if (duration_str && duration_str === "stopwatch") {
+        root.timerReset();
+        root.timerStopwatchMode = true;
+      } else if (duration_str && duration_str !== "") {
+        const seconds = root.parseDuration(duration_str);
+        if (seconds > 0) {
+          root.timerReset();
+          root.timerRemainingSeconds = seconds;
+          root.timerStopwatchMode = false;
+        }
+      }
+      root.timerStart();
+    }
+
+    function pause() {
+      root.timerPause();
+    }
+
+    function reset() {
+      root.timerReset();
+    }
+  }
 
   // Timer state
   property bool timerRunning: false
@@ -114,6 +150,30 @@ Item {
     }
     SoundService.stopSound("alarm-beep.wav");
     root.timerSoundPlaying = false;
+  }
+
+  function parseDuration(duration_str) {
+    if (!duration_str) return 0;
+    
+    // Default to minutes if just a number
+    if (/^\d+$/.test(duration_str)) {
+      return parseInt(duration_str) * 60;
+    }
+
+    var totalSeconds = 0;
+    var regex = /(\d+)([hms])/g;
+    var match;
+    
+    while ((match = regex.exec(duration_str)) !== null) {
+      var value = parseInt(match[1]);
+      var unit = match[2];
+      
+      if (unit === 'h') totalSeconds += value * 3600;
+      else if (unit === 'm') totalSeconds += value * 60;
+      else if (unit === 's') totalSeconds += value;
+    }
+    
+    return totalSeconds;
   }
 
   function timerOnFinished() {
