@@ -6,7 +6,8 @@
         "start": "開始",
         "pause": "一時停止",
         "resume": "再開",
-        "reset": "リセット"
+        "reset": "リセット",
+        "settings": "ウィジェット設定"
     },
     "toast": {
         "title": "タイマー",

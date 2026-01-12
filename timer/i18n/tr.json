@@ -6,7 +6,8 @@
         "start": "Başlat",
         "pause": "Duraklat",
         "resume": "Devam Et",
-        "reset": "Sıfırla"
+        "reset": "Sıfırla",
+        "settings": "Widget Ayarları"
     },
     "toast": {
         "title": "Zamanlayıcı",

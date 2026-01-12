@@ -6,7 +6,8 @@
         "start": "Start",
         "pause": "Pause",
         "resume": "Fortsetzen",
-        "reset": "Zurücksetzen"
+        "reset": "Zurücksetzen",
+        "settings": "Widget-Einstellungen"
     },
     "toast": {
         "title": "Timer",

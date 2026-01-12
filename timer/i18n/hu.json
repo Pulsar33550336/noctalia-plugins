@@ -6,7 +6,8 @@
         "start": "Indítás",
         "pause": "Szünet",
         "resume": "Folytatás",
-        "reset": "Visszaállítás"
+        "reset": "Visszaállítás",
+        "settings": "Widget beállítások"
     },
     "toast": {
         "title": "Időzítő",

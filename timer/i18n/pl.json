@@ -6,7 +6,8 @@
         "start": "Start",
         "pause": "Pauza",
         "resume": "Wznów",
-        "reset": "Resetuj"
+        "reset": "Resetuj",
+        "settings": "Ustawienia widżetu"
     },
     "toast": {
         "title": "Czasomierz",

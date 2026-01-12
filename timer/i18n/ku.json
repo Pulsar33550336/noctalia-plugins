@@ -6,7 +6,8 @@
         "start": "Destpêkirin",
         "pause": "Rawestandin",
         "resume": "Berdewamkirin",
-        "reset": "Nûkirin"
+        "reset": "Nûkirin",
+        "settings": "Mîhengên Widget"
     },
     "toast": {
         "title": "Demjimêr",

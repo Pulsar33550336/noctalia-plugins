@@ -6,7 +6,8 @@
         "start": "Démarrer",
         "pause": "Pause",
         "resume": "Reprendre",
-        "reset": "Réinitialiser"
+        "reset": "Réinitialiser",
+        "settings": "Paramètres du Widget"
     },
     "toast": {
         "title": "Minuteur",

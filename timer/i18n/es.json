@@ -6,7 +6,8 @@
         "start": "Iniciar",
         "pause": "Pausa",
         "resume": "Reanudar",
-        "reset": "Reiniciar"
+        "reset": "Reiniciar",
+        "settings": "Configuración del Widget"
     },
     "toast": {
         "title": "Temporizador",
