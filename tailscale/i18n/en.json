@@ -1,16 +1,23 @@
 {
   "settings": {
     "title": "Tailscale Settings",
-    "description": "Configure Tailscale status display in the menu bar",
+    "description": "Configure Tailscale status display and behavior",
     "refresh-interval": "Refresh Interval",
-    "refresh-interval-desc": "How often to check Tailscale status (in milliseconds)",
+    "refresh-interval-desc": "How often to check Tailscale status",
     "display-options": "Display Options",
     "compact-mode": "Compact Mode",
-    "compact-mode-desc": "Show only icon",
+    "compact-mode-desc": "Show only icon in the bar",
     "show-ip": "Show IP Address",
-    "show-ip-desc": "Display Tailscale IP in bar",
+    "show-ip-desc": "Display Tailscale IP in the bar widget",
     "show-peers": "Show Peer Count",
-    "show-peers-desc": "Display connected device count"
+    "show-peers-desc": "Display connected device count in the bar",
+    "hide-disconnected": "Hide Disconnected Peers",
+    "hide-disconnected-desc": "Only show online peers in the panel",
+    "terminal": "Terminal Configuration",
+    "terminal-command": "Terminal Command",
+    "terminal-command-desc": "Command to launch terminal for SSH/ping (e.g., 'ghostty', 'alacritty', 'kitty')",
+    "ping-count": "Ping Count",
+    "ping-count-desc": "Number of ping packets to send when testing connectivity"
   },
   "context": {
     "connect": "Connect",
@@ -28,6 +35,10 @@
     "disconnected": "Tailscale disconnected",
     "ip-copied": {
       "title": "IP Copied"
+    },
+    "terminal-not-configured": {
+      "title": "Terminal Not Configured",
+      "message": "Please set a terminal command in plugin settings"
     }
   },
   "panel": {
@@ -36,6 +47,15 @@
     "online": "Online",
     "offline": "Offline",
     "no-peers": "No connected peers",
-    "admin-console": "Admin Console"
+    "admin-console": "Admin Console",
+    "terminal-warning": {
+      "title": "Terminal Not Configured",
+      "message": "Set a terminal command in settings to enable SSH and ping"
+    },
+    "exit-node": {
+      "active": "Exit Node Active",
+      "online": "Online",
+      "offline": "Offline"
+    }
   }
 }

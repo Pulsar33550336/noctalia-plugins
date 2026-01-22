@@ -26,7 +26,10 @@
       "refreshInterval": 5000,
       "compactMode": false,
       "showIpAddress": true,
-      "showPeerCount": true
+      "showPeerCount": true,
+      "hideDisconnected": false,
+      "terminalCommand": "",
+      "pingCount": 5
     }
   }
 }

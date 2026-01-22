@@ -19,7 +19,12 @@ Rectangle {
 
   readonly property var mainInstance: pluginApi?.mainInstance
 
-  implicitWidth: Style.capsuleHeight
+  implicitWidth: {
+    if (mainInstance?.compactMode || !mainInstance?.tailscaleRunning) {
+      return Style.capsuleHeight
+    }
+    return contentRow.implicitWidth + Style.marginM * 2
+  }
   implicitHeight: Style.capsuleHeight
 
   readonly property bool barIsVertical: Settings.data.bar.position === "left" || Settings.data.bar.position === "right"
@@ -45,7 +50,30 @@ Rectangle {
       opacity: mainInstance?.isRefreshing ? 0.5 : 1.0
     }
 
+    // Show details when not in compact mode
+    ColumnLayout {
+      visible: !mainInstance?.compactMode && mainInstance?.tailscaleRunning
+      spacing: 2
+      Layout.leftMargin: Style.marginXS
+      Layout.rightMargin: Style.marginS
 
+      // IP Address
+      NText {
+        visible: mainInstance?.showIpAddress && mainInstance?.tailscaleIp
+        text: mainInstance?.tailscaleIp || ""
+        pointSize: Style.fontSizeXS
+        color: mouseArea.containsMouse ? Color.mOnHover : Color.mOnSurface
+        font.family: Settings.data.ui.fontFixed
+      }
+
+      // Peer count
+      NText {
+        visible: mainInstance?.showPeerCount
+        text: (mainInstance?.peerCount || 0) + " " + (pluginApi?.tr("panel.peers") || "peers")
+        pointSize: Style.fontSizeXS
+        color: mouseArea.containsMouse ? Color.mOnHover : Color.mOnSurface
+      }
+    }
   }
 
   MouseArea {

@@ -15,6 +15,14 @@ Item {
     }
   }
 
+  // Watch for settings changes (when pluginSettings object is replaced)
+  property var settingsWatcher: pluginApi?.pluginSettings
+  onSettingsWatcherChanged: {
+    if (settingsWatcher) {
+      settingsVersion++
+    }
+  }
+
   property int settingsVersion: 0
 
   property int refreshInterval: _computeRefreshInterval()
@@ -43,6 +51,7 @@ Item {
   property bool isRefreshing: false
   property string lastToggleAction: ""
   property var peerList: []
+  property var exitNodeStatus: null
 
   Process {
     id: whichProcess
@@ -90,11 +99,23 @@ Item {
             }
             root.peerList = peers
             root.peerCount = peers.length
+
+            // Extract exit node status if present
+            if (data.ExitNodeStatus) {
+              root.exitNodeStatus = {
+                "ID": data.ExitNodeStatus.ID || "",
+                "Online": data.ExitNodeStatus.Online || false,
+                "TailscaleIPs": data.ExitNodeStatus.TailscaleIPs || []
+              }
+            } else {
+              root.exitNodeStatus = null
+            }
           } else {
             root.tailscaleIp = ""
             root.tailscaleStatus = root.tailscaleRunning ? "Connected" : "Disconnected"
             root.peerCount = 0
             root.peerList = []
+            root.exitNodeStatus = null
           }
         } catch (e) {
           Logger.e("Tailscale", "Failed to parse status: " + e)

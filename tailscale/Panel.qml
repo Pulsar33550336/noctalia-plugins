@@ -45,19 +45,37 @@ Item {
   }
 
   function sshToSelectedPeer() {
+    if (!root.isTerminalConfigured) {
+      ToastService.showError(
+        pluginApi?.tr("toast.terminal-not-configured.title") || "Terminal Not Configured",
+        pluginApi?.tr("toast.terminal-not-configured.message") || "Please set a terminal command in plugin settings",
+        "alert-circle"
+      )
+      return
+    }
+    
     if (selectedPeer) {
       var ips = selectedPeer.TailscaleIPs?.filter(ip => ip.startsWith("100.")) || []
       if (ips.length > 0) {
-        Quickshell.execDetached(["ghostty", "-e", "ssh", ips[0]])
+        Quickshell.execDetached([root.terminalCommand, "-e", "ssh", ips[0]])
       }
     }
   }
 
   function pingSelectedPeer() {
+    if (!root.isTerminalConfigured) {
+      ToastService.showError(
+        pluginApi?.tr("toast.terminal-not-configured.title") || "Terminal Not Configured",
+        pluginApi?.tr("toast.terminal-not-configured.message") || "Please set a terminal command in plugin settings",
+        "alert-circle"
+      )
+      return
+    }
+    
     if (selectedPeer) {
       var ips = selectedPeer.TailscaleIPs?.filter(ip => ip.startsWith("100.")) || []
       if (ips.length > 0) {
-        Quickshell.execDetached(["ghostty", "-e", "ping", "-c", "5", ips[0]])
+        Quickshell.execDetached([root.terminalCommand, "-e", "ping", "-c", root.pingCount.toString(), ips[0]])
       }
     }
   }
@@ -74,12 +92,13 @@ Item {
         label: pluginApi?.tr("context.ssh") || "SSH to host", 
         action: "ssh", 
         icon: "terminal",
-        enabled: root.selectedPeer?.Online || false
+        enabled: (root.selectedPeer?.Online || false) && root.isTerminalConfigured
       },
       { 
         label: pluginApi?.tr("context.ping") || "Ping host", 
         action: "ping", 
-        icon: "activity"
+        icon: "activity",
+        enabled: root.isTerminalConfigured
       }
     ]
     onTriggered: function(action) {
@@ -105,9 +124,34 @@ Item {
 
   readonly property bool panelReady: pluginApi !== null && mainInstance !== null && mainInstance !== undefined
 
+  readonly property bool hideDisconnected:
+    pluginApi?.pluginSettings?.hideDisconnected ??
+    pluginApi?.manifest?.metadata?.defaultSettings?.hideDisconnected ??
+    false
+
+  readonly property string terminalCommand:
+    pluginApi?.pluginSettings?.terminalCommand ||
+    pluginApi?.manifest?.metadata?.defaultSettings?.terminalCommand ||
+    ""
+
+  readonly property int pingCount:
+    pluginApi?.pluginSettings?.pingCount ||
+    pluginApi?.manifest?.metadata?.defaultSettings?.pingCount ||
+    5
+
+  readonly property bool isTerminalConfigured: terminalCommand.trim() !== ""
+
   readonly property var sortedPeerList: {
     if (!mainInstance?.peerList) return []
     var peers = mainInstance.peerList.slice()
+    
+    // Filter out disconnected peers if setting is enabled
+    if (hideDisconnected) {
+      peers = peers.filter(function(peer) {
+        return peer.Online === true
+      })
+    }
+    
     peers.sort(function(a, b) {
       // Online peers first
       if (a.Online && !b.Online) return -1
@@ -194,6 +238,101 @@ Item {
                     mainInstance.tailscaleIp,
                     "clipboard"
                   )
+                }
+              }
+            }
+          }
+
+          // Exit node status
+          Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: exitNodeLayout.implicitHeight + Style.marginS * 2
+            visible: mainInstance?.exitNodeStatus !== null && mainInstance?.exitNodeStatus !== undefined
+            color: Qt.alpha(Color.mPrimary, 0.1)
+            radius: Style.radiusS
+            border.width: 1
+            border.color: Qt.alpha(Color.mPrimary, 0.3)
+
+            RowLayout {
+              id: exitNodeLayout
+              anchors.fill: parent
+              anchors.margins: Style.marginS
+              spacing: Style.marginS
+
+              NIcon {
+                icon: "globe"
+                pointSize: Style.fontSizeS
+                color: mainInstance?.exitNodeStatus?.Online ? Color.mPrimary : Color.mOnSurfaceVariant
+              }
+
+              ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 2
+
+                NText {
+                  text: pluginApi?.tr("panel.exit-node.active") || "Exit Node Active"
+                  pointSize: Style.fontSizeXS
+                  font.weight: Style.fontWeightMedium
+                  color: Color.mPrimary
+                }
+
+                NText {
+                  Layout.fillWidth: true
+                  text: {
+                    if (!mainInstance?.exitNodeStatus) return ""
+                    var ips = mainInstance.exitNodeStatus.TailscaleIPs || []
+                    var ipv4 = ips.filter(ip => ip.startsWith("100."))[0]
+                    var status = mainInstance.exitNodeStatus.Online ? (pluginApi?.tr("panel.exit-node.online") || "Online") : (pluginApi?.tr("panel.exit-node.offline") || "Offline")
+                    return ipv4 ? ipv4 + " • " + status : status
+                  }
+                  pointSize: Style.fontSizeXS
+                  color: Color.mOnSurfaceVariant
+                  font.family: Settings.data.ui.fontFixed
+                  wrapMode: Text.Wrap
+                }
+              }
+            }
+          }
+
+          // Warning banner for missing terminal configuration
+          Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: terminalWarningLayout.implicitHeight + Style.marginM * 2
+            visible: !root.isTerminalConfigured
+            color: Qt.alpha(Color.mError, 0.1)
+            radius: Style.radiusM
+            border.width: 1
+            border.color: Qt.alpha(Color.mError, 0.3)
+
+            RowLayout {
+              id: terminalWarningLayout
+              anchors.fill: parent
+              anchors.margins: Style.marginM
+              spacing: Style.marginS
+
+              NIcon {
+                icon: "alert-circle"
+                pointSize: Style.fontSizeM
+                color: Color.mError
+              }
+
+              ColumnLayout {
+                Layout.fillWidth: true
+                spacing: Style.marginXS
+
+                NText {
+                  text: pluginApi?.tr("panel.terminal-warning.title") || "Terminal Not Configured"
+                  pointSize: Style.fontSizeS
+                  font.weight: Style.fontWeightMedium
+                  color: Color.mError
+                }
+
+                NText {
+                  Layout.fillWidth: true
+                  text: pluginApi?.tr("panel.terminal-warning.message") || "Set a terminal command in settings to enable SSH and ping"
+                  pointSize: Style.fontSizeXS
+                  color: Color.mOnSurfaceVariant
+                  wrapMode: Text.Wrap
                 }
               }
             }
