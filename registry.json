@@ -361,8 +361,8 @@
     {
       "id": "tailscale",
       "name": "Tailscale",
-      "version": "1.0.0",
-      "author": "noctalia",
+      "version": "1.1.0",
+      "author": "nineluj",
       "description": "Show Tailscale status in the menu bar.",
       "repository": "https://github.com/noctalia-dev/noctalia-plugins",
       "minNoctaliaVersion": "4.0.0",
@@ -370,9 +370,9 @@
       "tags": [
         "Bar",
         "Network",
-        "System"
+        "Panel"
       ],
-      "lastUpdated": "2026-01-23T19:23:56-05:00"
+      "lastUpdated": "2026-01-24T17:13:30-05:00"
     },
     {
       "id": "timer",
