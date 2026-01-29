@@ -875,7 +875,7 @@ Item {
                         visible: delegateItem.editing
                         anchors.fill: parent
                         anchors.leftMargin: Style.marginS
-                        anchors.rightMargin: Style.baseWidgetSize * 0.8 + Style.marginL
+                        anchors.rightMargin: Style.baseWidgetSize * 0.4
                         height: parent.height * 0.8
                         anchors.verticalCenter: parent.verticalCenter
 
@@ -932,7 +932,7 @@ Item {
                           anchors.verticalCenter: parent.verticalCenter
                           anchors.rightMargin: Style.marginM
 
-                          scale: 0.7
+                          scale: 0.8
                           colorBg: "transparent"
                           colorBgHover: "transparent"
                           colorFg: Color.mOnSurface
@@ -948,15 +948,14 @@ Item {
                       }
                     }
 
-                    // Edit button (only show when not editing) and Save/Cancel buttons
+                    // Edit button (only show when not editing)
                     Item {
                       Layout.preferredWidth: Style.baseWidgetSize * 0.8
                       Layout.preferredHeight: parent.height
+                      visible: !delegateItem.editing
 
-                      // Edit button (only show when not editing)
                       Item {
                         id: editButtonContainer
-                        visible: !delegateItem.editing
                         anchors.centerIn: parent
 
                         implicitWidth: Style.baseWidgetSize * 0.8
@@ -1025,18 +1024,23 @@ Item {
                           ]
                         }
                       }
+                    }
 
-                      // Save/Cancel buttons (only show when editing)
+                    // Save/Cancel buttons (only show when editing)
+                    Item {
+                      implicitWidth: Style.baseWidgetSize * 0.8
+                      implicitHeight: Style.baseWidgetSize * 0.8
+                      visible: delegateItem.editing
+
                       RowLayout {
                         id: editButtonsRow
-                        visible: delegateItem.editing
                         anchors.centerIn: parent
-                        spacing: Style.marginS
+                        spacing: Style.baseWidgetSize * 0.4
 
                         NIconButton {
+                          id: saveButton
                           icon: "check"
-                          Layout.preferredWidth: Style.baseWidgetSize * 0.6
-                          Layout.preferredHeight: Style.baseWidgetSize * 0.6
+                          baseSize: Style.baseWidgetSize * 0.9
 
                           onClicked: {
                             delegateItem.saveEdit();
@@ -1044,9 +1048,9 @@ Item {
                         }
 
                         NIconButton {
+                          id: cancelButton
                           icon: "x"
-                          Layout.preferredWidth: Style.baseWidgetSize * 0.6
-                          Layout.preferredHeight: Style.baseWidgetSize * 0.6
+                          baseSize: Style.baseWidgetSize * 0.9
 
                           onClicked: {
                             delegateItem.cancelEdit();
@@ -1068,6 +1072,7 @@ Item {
                         pointSize: Style.fontSizeM
                         color: Color.mOnSurfaceVariant
                         opacity: 0.5
+                        visible: !delegateItem.editing
 
                         MouseArea {
                           id: mouseArea
