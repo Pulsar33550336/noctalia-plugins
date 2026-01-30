@@ -1,34 +1,40 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Io
 import qs.Commons
 import qs.Widgets
 import qs.Services.Location
 
+// Bar Widget Component
 Item {
   id: root
 
+  property var pluginApi: null
   readonly property bool weatherReady: Settings.data.location.weatherEnabled && (LocationService.data.weather !== null)
 
-  property var pluginApi: null
+  // Required properties for bar widgets
   property ShellScreen screen
   property string widgetId: ""
   property string section: ""
-  property bool hovered: false
 
+  // Get settings or use false
   readonly property bool showTempText: pluginApi?.pluginSettings?.showTempText ?? false
   readonly property bool showConditionIcon: pluginApi?.pluginSettings?.showConditionIcon ?? false
-  readonly property bool removeTempLetter: pluginApi?.pluginSettings?.removeTempLetter ?? false
+  readonly property bool showTempLetter: pluginApi?.pluginSettings?.showTempLetter ?? false
 
-  readonly property string barPosition: Settings.data.bar.position
+  // Bar positioning properties
+  readonly property string screenName: screen ? screen.name : ""
+  readonly property string barPosition: Settings.getBarPositionForScreen(screenName)
   readonly property bool isVertical: barPosition === "left" || barPosition === "right"
+  readonly property real barHeight: Style.getBarHeightForScreen(screenName)
+  readonly property real capsuleHeight: Style.getCapsuleHeightForScreen(screenName)
+  readonly property real barFontSize: Style.getBarFontSizeForScreen(screenName)
+
+  readonly property real contentWidth: isVertical ? root.barHeight - Style.marginL : layout.implicitWidth + Style.marginL * 2
+  readonly property real contentHeight: isVertical ? layout.implicitHeight + Style.marginS * 2 : Style.capsuleHeight
 
   visible: root.weatherReady
   opacity: root.weatherReady ? 1.0 : 0.0
-
-  readonly property real contentWidth: isVertical ? Style.capsuleHeight : layout.implicitWidth + Style.marginS * 2
-  readonly property real contentHeight: isVertical ? layout.implicitHeight + Style.marginS * 2 : Style.capsuleHeight
 
   implicitWidth: contentWidth
   implicitHeight: contentHeight
@@ -40,7 +46,7 @@ Item {
     width: root.contentWidth
     height: root.contentHeight
     color: root.hovered ? Color.mHover : Style.capsuleColor
-    radius: Style.radiusM
+    radius: !isVertical ? Style.radiusM : width * 0.5
     border.color: Style.capsuleBorderColor
     border.width: Style.capsuleBorderWidth
 
@@ -57,36 +63,51 @@ Item {
         rowSpacing: Style.marginS
         columnSpacing: Style.marginS
 
-        NIcon {
-          Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-          icon: weatherReady ? LocationService.weatherSymbolFromCode(LocationService.data.weather.current_weather.weathercode, LocationService.data.weather.current_weather.is_day) : "weather-cloud-off"
-          color: root.hovered ? Color.mOnHover : Color.mOnSurface
-          visible: root.showConditionIcon
-        }
+            NIcon {
+                visible: root.showConditionIcon
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+                icon: weatherReady ? LocationService.weatherSymbolFromCode(LocationService.data.weather.current_weather.weathercode, LocationService.data.weather.current_weather.is_day) : "weather-cloud-off"
+                applyUiScale: true
+                color: root.hovered ? Color.mOnHover : Color.mOnSurface
+            }
 
-        NText {
-          Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
-            text: {
-            if (!weatherReady || !root.showTempText) {
-                return "";
+            NText {
+                visible: root.showTempText
+                text: {
+                    if (!weatherReady || !root.showTempText) {
+                        return "";
+                    }
+                    var temp = LocationService.data.weather.current_weather.temperature;
+                    var suffix = "°C";
+                    if (Settings.data.location.useFahrenheit) {
+                        temp = LocationService.celsiusToFahrenheit(temp);
+                        var suffix = "°F";
+                    }
+                    temp = Math.round(temp);
+                    if (!root.showTempLetter) {
+                        suffix = "";
+                    }
+                    return `${temp}${suffix}`;
+                }
+                color: root.hovered ? Color.mOnHover : Color.mOnSurface
+                pointSize: root.barFontSize
+                applyUiScale: true
             }
-            var temp = LocationService.data.weather.current_weather.temperature;
-            var suffix = "C";
-            if (Settings.data.location.useFahrenheit) {
-                temp = LocationService.celsiusToFahrenheit(temp);
-                var suffix = "F";
-            }
-            temp = Math.round(temp);
-            if (!root.removeTempLetter) {
-                suffix = "";
-            }
-            return `${temp}°${suffix}`;
-            }
-          color: root.hovered ? Color.mOnHover : Color.mOnSurface
-          pointSize: Style.barFontSize
-          visible: root.showTempText
         }
+    }
+}
+
+  // Mouse area to open panel
+  MouseArea {
+    id: mouseArea
+    anchors.fill: parent
+    hoverEnabled: true
+    cursorShape: Qt.PointingHandCursor
+
+    onClicked: {
+      if (pluginApi) {
+        Logger.i("WeatherIndicator", "Opening Hello World panel");
       }
     }
-    }
+  }
 }

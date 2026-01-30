@@ -9,7 +9,6 @@
   "description": "Shows the current weather condition and tempurature.",
   "tags": ["Bar"],
   "entryPoints": {
-    "main": "Main.qml",
     "barWidget": "BarWidget.qml",
     "settings": "Settings.qml"
   },
@@ -19,7 +18,7 @@
   "metadata": {
     "defaultSettings": {
       "showTempText": true,
-      "removeTempLetter": false,
+      "showTempLetter": true,
       "showConditionIcon": true
     }
   }

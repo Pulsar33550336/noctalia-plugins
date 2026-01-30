@@ -4,9 +4,9 @@
       "desc": "Display the current degrees alongside the condition.",
       "label": "Show temperature text"
     },
-    "removeTempLetter": {
-      "desc": "Remove the letter (C or F) indicating the temperature unit.",
-      "label": "Remove temperature letter"
+    "showTempLetter": {
+      "desc": "Show the letter (°C or °F) indicating the temperature unit.",
+      "label": "Show temperature letter"
     },
     "showConditionIcon": {
       "desc": "Include the visual weather symbol in the widget.",

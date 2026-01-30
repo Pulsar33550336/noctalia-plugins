@@ -9,9 +9,9 @@ ColumnLayout {
 
   property var pluginApi: null
 
-  property bool showTempText: pluginApi?.pluginSettings?.showTempText || pluginApi?.manifest?.metadata?.defaultSettings?.showTempText
-  property bool showConditionIcon: pluginApi?.pluginSettings?.showConditionIcon || pluginApi?.manifest?.metadata?.defaultSettings?.showConditionIcon
-  property bool removeTempLetter: pluginApi?.pluginSettings?.removeTempLetter || pluginApi?.manifest?.metadata?.defaultSettings?.removeTempLetter
+  property bool showTempText: pluginApi?.pluginSettings?.showTempText ?? false
+  property bool showConditionIcon: pluginApi?.pluginSettings?.showConditionIcon ?? false
+  property bool showTempLetter: pluginApi?.pluginSettings?.showTempLetter ?? false
 
   spacing: Style.marginL
 
@@ -24,7 +24,7 @@ ColumnLayout {
     label: pluginApi?.tr("settings.showConditionIcon.label") || "showConditionIcon"
     description: pluginApi?.tr("settings.showConditionIcon.desc") || "Show the condition icon"
     checked: root.showConditionIcon
-    onToggled: function (checked) {
+    onToggled: checked => {
       root.showConditionIcon = checked;
       root.showTempText = true;
     }
@@ -35,7 +35,7 @@ ColumnLayout {
     label: pluginApi?.tr("settings.showTempText.label") || "showTempText"
     description: pluginApi?.tr("settings.showTempText.desc") || "Show the temperature"
     checked: root.showTempText
-    onToggled: function (checked) {
+    onToggled: checked => {
       root.showTempText = checked;
       root.showConditionIcon = true;
     }
@@ -43,13 +43,12 @@ ColumnLayout {
 
   NToggle {
     id: toggleTempLetter
-    label: pluginApi?.tr("settings.removeTempLetter.label") || "removeTempLetter"
-    description: pluginApi?.tr("settings.removeTempLetter.desc") || "Remove temperature letter (F or C)"
-    checked: root.removeTempLetter
+    label: pluginApi?.tr("settings.showTempLetter.label") || "showTempLetter"
+    description: pluginApi?.tr("settings.showTempLetter.desc") || "Show temperature letter (°F or °C)"
+    checked: root.showTempLetter
     visible: root.showTempText
-    onToggled: function (checked) {
-      root.removeTempLetter = checked;
-      root.showTempText = true;
+    onToggled: checked => {
+      root.showTempLetter = checked;
     }
   }
 
@@ -61,7 +60,7 @@ ColumnLayout {
 
     pluginApi.pluginSettings.showTempText = root.showTempText;
     pluginApi.pluginSettings.showConditionIcon = root.showConditionIcon;
-    pluginApi.pluginSettings.removeTempLetter = root.removeTempLetter;
+    pluginApi.pluginSettings.showTempLetter = root.showTempLetter;
 
     pluginApi.saveSettings();
 
