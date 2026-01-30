@@ -213,7 +213,6 @@ Item {
           onClicked: {
             var screen = pluginApi?.panelOpenScreen;
             if (screen && pluginApi?.manifest) {
-              console.log("[KeybindCheatsheet] Opening plugin settings on screen:", screen.name);
               BarService.openPluginSettings(screen, pluginApi.manifest);
             }
           }

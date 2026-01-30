@@ -42,8 +42,27 @@ Item {
   }
 
   Component.onDestruction: {
-    // Stop resize timer to prevent firing after destruction
+    // Stop timers and processes to prevent firing after destruction
     resizeTimer.stop();
+    if (settingsRefreshProcess.running) {
+      settingsRefreshProcess.running = false;
+    }
+  }
+
+  // Helper to get config name for IPC
+  function getConfigName() {
+    var qsConfig = Quickshell.env("QS_CONFIG_NAME");
+    if (qsConfig && qsConfig.length > 0) {
+      return qsConfig;
+    }
+    return "noctalia-shell";
+  }
+
+  // Process to call IPC refresh command
+  Process {
+    id: settingsRefreshProcess
+    command: ["qs", "-c", rootItem.getConfigName(), "ipc", "call", "plugin:keybind-cheatsheet", "refresh"]
+    running: false
   }
 
   ColumnLayout {
@@ -465,15 +484,12 @@ Item {
           text: rootItem.pluginApi?.tr("keybind-cheatsheet.settings.refresh-keybinds") || "Refresh Keybinds"
           icon: "refresh"
           onClicked: {
-            if (rootItem.pluginApi && rootItem.pluginApi.pluginSettings) {
-              rootItem.pluginApi.pluginSettings.cheatsheetData = [];
-              rootItem.pluginApi.pluginSettings.detectedCompositor = "";
-              rootItem.pluginApi.saveSettings();
-              ToastService.showNotice(
-                rootItem.pluginApi?.tr("keybind-cheatsheet.settings.refresh-message") ||
-                "Keybinds will be reloaded when you open the panel."
-              );
-            }
+            // Call IPC refresh to trigger re-parsing
+            settingsRefreshProcess.running = true;
+            ToastService.showNotice(
+              rootItem.pluginApi?.tr("keybind-cheatsheet.settings.refresh-message") ||
+              "Refreshing keybinds..."
+            );
           }
         }
 
