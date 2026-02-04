@@ -18,13 +18,11 @@ ColumnLayout {
   // Calibre db
   ColumnLayout {
       NLabel {
-          enabled: root.active
           label: pluginApi?.tr("settings.launcher.title") || "Launcher"
           description: pluginApi?.tr("settings.launcher.description") || "The program used to open book files"
       }
 
       NTextInput {
-          enabled: root.active
           Layout.fillWidth: true
           placeholderText: "xdg-open"
           text: root.editLauncher
