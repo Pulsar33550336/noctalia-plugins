@@ -3,7 +3,6 @@ import QtQuick
 import QtQuick.Layouts
 
 import Quickshell
-import Quickshell.Io
 
 import qs.Commons
 import qs.Widgets
@@ -13,7 +12,6 @@ import "./common"
 
 Item {
     id: root
-    
     property var pluginApi: null
 
     readonly property var geometryPlaceholder: panelContainer
@@ -23,22 +21,13 @@ Item {
     property real contentPreferredHeight: 700 * Style.uiScaleRatio
 
 
-    readonly property string currentWallpaper: 
-        pluginApi.pluginSettings.currentWallpaper || 
-        ""
-
-    readonly property bool enabled: 
-        pluginApi.pluginSettings.enabled || 
-        false
-
-    readonly property bool thumbCacheReady:
-        pluginApi?.pluginSettings.thumbCacheReady ||
-        false
-
-    readonly property string wallpapersFolder: 
-        pluginApi.pluginSettings.wallpapersFolder || 
-        pluginApi.manifest.metadata.defaultSettings.wallpapersFolder || 
-        "~/Pictures/Wallpapers"
+    /***************************
+    * PROPERTIES
+    ***************************/
+    readonly property string    currentWallpaper:   pluginApi.pluginSettings.currentWallpaper   || ""
+    readonly property bool      enabled:            pluginApi.pluginSettings.enabled            || false
+    readonly property bool      thumbCacheReady:    pluginApi.pluginSettings.thumbCacheReady    || false
+    readonly property string    wallpapersFolder:   pluginApi.pluginSettings.wallpapersFolder   || "~/Pictures/Wallpapers"
 
 
     /***************************
@@ -48,6 +37,7 @@ Item {
         // When the thumbnail cache is ready, reload the folder model.
         folderModel.forceReload();
     }
+
 
     /***************************
     * COMPONENTS

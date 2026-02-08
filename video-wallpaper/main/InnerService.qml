@@ -3,6 +3,8 @@ import QtQuick
 import qs.Commons
 import qs.Services.UI
 
+import "../common"
+
 Item {
     id: root
     required property var pluginApi
@@ -11,11 +13,14 @@ Item {
     /***************************
     * PROPERTIES
     ***************************/
-    required property string currentWallpaper
-    required property bool enabled
-    required property var oldWallpapers
+    readonly property string    currentWallpaper:   pluginApi.pluginSettings.currentWallpaper   || ""
+    readonly property bool      enabled:            pluginApi.pluginSettings.enabled            || false
+    readonly property var       oldWallpapers:      pluginApi.pluginSettings.oldWallpapers      || ({})
 
-    required property Thumbnails thumbnails
+    required property var getThumbPath
+    required property FolderModel thumbFolderModel
+
+    signal oldWallpapersSaved
 
 
     /***************************
@@ -28,10 +33,10 @@ Item {
         let wallpapers = {};
         const oldWallpapers = WallpaperService.currentWallpapers;
         for(let screenName in oldWallpapers) {
-            const thumbPath = thumbnails.getThumbPath(root.currentWallpaper);
+            const thumbPath = getThumbPath(root.currentWallpaper);
             const oldWallpaper = oldWallpapers[screenName];
             // Only save the old wallpapers if it isn't the current video wallpaper, and if the thumbnail folder doesn't know of it.
-            if(oldWallpaper != thumbPath && thumbnails.thumbFolderModel.indexOf(oldWallpaper) === -1) {
+            if(oldWallpaper != thumbPath && thumbFolderModel.indexOf(oldWallpaper) === -1) {
                 wallpapers[screenName] = oldWallpapers[screenName];
             }
         }
@@ -40,6 +45,8 @@ Item {
             pluginApi.pluginSettings.oldWallpapers = wallpapers;
             pluginApi.saveSettings();
         }
+
+        oldWallpapersSaved();
     }
 
     function applyOldWallpapers() {
@@ -47,6 +54,25 @@ Item {
 
         for (let screenName in oldWallpapers) {
             WallpaperService.changeWallpaper(oldWallpapers[screenName], screenName);
+        }
+    }
+
+
+    /***************************
+    * EVENTS
+    ***************************/
+    onCurrentWallpaperChanged: {
+        if (root.enabled && root.currentWallpaper != "") {
+            saveOldWallpapers();
+        } else {
+            applyOldWallpapers();
+        }
+    }
+    onEnabledChanged: {
+        if (root.enabled && root.currentWallpaper != "") {
+            saveOldWallpapers();
+        } else {
+            applyOldWallpapers();
         }
     }
 

@@ -16,18 +16,20 @@ Item {
     /***************************
     * PROPERTIES
     ***************************/
-    required property bool enabled
-    required property bool thumbCacheReady
-    required property string wallpapersFolder
+    readonly property string    currentWallpaper:   pluginApi.pluginSettings.currentWallpaper   || ""
+    readonly property bool      enabled:            pluginApi.pluginSettings.enabled            || false
+    readonly property bool      thumbCacheReady:    pluginApi.pluginSettings.thumbCacheReady    || false
+    readonly property string    wallpapersFolder:   pluginApi.pluginSettings.wallpapersFolder   || "~/Pictures/Wallpapers"
+
+    required property var getThumbPath
+    required property string thumbCacheFolderPath
+
     required property FolderModel folderModel
+    required property FolderModel thumbFolderModel
 
-    readonly property alias thumbFolderModel: thumbFolderModel
-
-    readonly property string thumbCacheFolderPath: ImageCacheService.wpThumbDir + "video-wallpaper"
+    property bool oldWallpapersSaved: false
     property int _thumbGenIndex: 0
 
-    // Local copy of the current wallpaper for only the startColorGen
-    property string _currentWallpaper
 
     /***************************
     * FUNCTIONS
@@ -46,21 +48,13 @@ Item {
         }
     }
 
-    function getThumbPath(videoPath: string): string {
-        const file = videoPath.split('/').pop();
 
-        return `${thumbCacheFolderPath}/${file}.bmp`
-    }
-
-    function startColorGen(currentWallpaper: string) {
-        _currentWallpaper = currentWallpaper;
-        // If the folder model isn't ready, or we are still regenerating a thumbnail, try in a bit
-        if(!thumbFolderModel.ready || startColorGenProc.running){
+    function startColorGen() {
+        // If the folder model isn't ready, or we are still regenerating a thumbnail, or the old wallpapers haven't saved yet, try in a bit
+        if(!thumbFolderModel.ready || startColorGenProc.running || !oldWallpapersSaved){
             startColorGenTimer.restart();
             return;
         }
-
-        Logger.d("video-wallpaper", currentWallpaper);
 
         const thumbPath = root.getThumbPath(currentWallpaper);
         if (thumbFolderModel.indexOf(thumbPath) !== -1) {
@@ -72,7 +66,11 @@ Item {
             Logger.d("video-wallpaper", "Thumbnail not found:", thumbPath);
             startColorGenProc.command = ["sh", "-c", `ffmpeg -y -i ${currentWallpaper} -vframes:v 1 ${thumbPath}`]
             startColorGenProc.running = true;
+            return;
         }
+
+        // Reset the flag
+        oldWallpapersSaved = false;
     }
 
     function thumbGeneration() {
@@ -124,18 +122,18 @@ Item {
     /***************************
     * EVENTS
     ***************************/
+    onCurrentWallpaperChanged: {
+        root.startColorGen();
+    }
+
     onWallpapersFolderChanged: {
         root.thumbGeneration();
     }
 
+
     /***************************
     * COMPONENTS
     ***************************/
-    FolderModel {
-        id: thumbFolderModel
-        folder: root.thumbCacheFolderPath
-        filters: ["*.bmp"]
-    }
 
     Process {
         // Process to create the thumbnail folder
@@ -155,7 +153,7 @@ Item {
         id: thumbRegenerationProc
         onExited: {
             // Reload the thumbFolder first
-            thumbFolderModel.forceReload();
+            root.thumbFolderModel.forceReload();
             root.thumbGeneration();
         }
     }
@@ -174,7 +172,7 @@ Item {
         id: startColorGenProc
         onExited: {
             // When finished recreating the thumbnail, try to apply the colors again
-            root.startColorGen(root._currentWallpaper);
+            root.startColorGen();
         }
     }
 
@@ -184,6 +182,6 @@ Item {
         repeat: false
         running: false
         triggeredOnStart: false
-        onTriggered: root.startColorGen(root._currentWallpaper);
+        onTriggered: root.startColorGen();
     }
 }
