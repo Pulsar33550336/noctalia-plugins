@@ -24,12 +24,12 @@ jobs:
       - name: Check for changes
         id: check_changes
         run: |
-          if git diff --quiet CODEOWNERS 2>/dev/null; then
-            echo "changed=false" >> $GITHUB_OUTPUT
-            echo "No changes to CODEOWNERS"
-          else
+          if [[ -n "$(git status --porcelain CODEOWNERS)" ]]; then
             echo "changed=true" >> $GITHUB_OUTPUT
             echo "Changes detected in CODEOWNERS"
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes to CODEOWNERS"
           fi
 
       - name: Commit and push changes
