@@ -7,6 +7,7 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  issues: write
 
 jobs:
   assign-reviewers:
@@ -14,6 +15,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+      issues: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -96,9 +98,5 @@ jobs:
             comment_body="${author_mentions}- this PR modifies your plugins. Please review when you have a chance."
           fi
           
-          # Post comment using REST API directly instead of gh CLI
-          curl -X POST \
-            -H "Authorization: token $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "https://api.github.com/repos/$REPO/issues/$PR_NUMBER/comments" \
-            -d "{\"body\":\"$comment_body\"}"
+          # Post comment using gh CLI
+          gh pr comment "$PR_NUMBER" --body "$comment_body"
