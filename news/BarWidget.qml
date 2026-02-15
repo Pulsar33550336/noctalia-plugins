@@ -124,12 +124,6 @@ Item {
     allNewsText = combined
   }
 
-  onNewsDataChanged: {
-    updateAllNewsText();
-    syncToPanel();
-  }
-  onErrorMessageChanged: syncToPanel()
-  onIsLoadingChanged: syncToPanel()
 
   // Fetch news
   function fetchNews() {
