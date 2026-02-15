@@ -1,9 +1,6 @@
 import QtQuick
-import QtQuick.Controls
 import QtQuick.Layouts
-import Quickshell
 import qs.Commons
-import qs.Services.UI
 import qs.Widgets
 
 ColumnLayout {
@@ -15,253 +12,134 @@ ColumnLayout {
   property var cfg: pluginApi?.pluginSettings || ({})
   property var defaults: pluginApi?.manifest?.metadata?.defaultSettings || ({})
 
-  property string apiKey: cfg.apiKey ?? defaults.apiKey ?? "YOUR_API_KEY_HERE"
-  property string country: cfg.country ?? defaults.country ?? "us"
-  property string category: cfg.category ?? defaults.category ?? "general"
-  property int refreshInterval: cfg.refreshInterval ?? defaults.refreshInterval ?? 30
-  property int maxHeadlines: cfg.maxHeadlines ?? defaults.maxHeadlines ?? 10
-  property int widgetWidth: cfg.widgetWidth ?? defaults.widgetWidth ?? 300
-  property int rollingSpeed: cfg.rollingSpeed ?? defaults.rollingSpeed ?? 50
+  // Local state
+  property string apiKeyValue: cfg.apiKey ?? defaults.apiKey ?? "YOUR_API_KEY_HERE"
+  property string countryValue: cfg.country ?? defaults.country ?? "us"
+  property string categoryValue: cfg.category ?? defaults.category ?? "general"
+  property int refreshIntervalValue: cfg.refreshInterval ?? defaults.refreshInterval ?? 30
+  property int maxHeadlinesValue: cfg.maxHeadlines ?? defaults.maxHeadlines ?? 10
+  property int widgetWidthValue: cfg.widgetWidth ?? defaults.widgetWidth ?? 300
+  property int rollingSpeedValue: cfg.rollingSpeed ?? defaults.rollingSpeed ?? 50
 
   function saveSettings() {
     if (!pluginApi) return;
     
-    pluginApi.pluginSettings.apiKey = apiKey;
-    pluginApi.pluginSettings.country = country;
-    pluginApi.pluginSettings.category = category;
-    pluginApi.pluginSettings.refreshInterval = refreshInterval;
-    pluginApi.pluginSettings.maxHeadlines = maxHeadlines;
-    pluginApi.pluginSettings.widgetWidth = widgetWidth;
-    pluginApi.pluginSettings.rollingSpeed = rollingSpeed;
+    pluginApi.pluginSettings.apiKey = apiKeyValue;
+    pluginApi.pluginSettings.country = countryValue;
+    pluginApi.pluginSettings.category = categoryValue;
+    pluginApi.pluginSettings.refreshInterval = refreshIntervalValue;
+    pluginApi.pluginSettings.maxHeadlines = maxHeadlinesValue;
+    pluginApi.pluginSettings.widgetWidth = widgetWidthValue;
+    pluginApi.pluginSettings.rollingSpeed = rollingSpeedValue;
     
     pluginApi.saveSettings();
   }
 
-  // Header
-  RowLayout {
-    Layout.fillWidth: true
-    spacing: Style.marginM
-
-    NIcon {
-      icon: "newspaper"
-      pointSize: Style.fontSizeXL
-      color: Color.mPrimary
-    }
-
-    NText {
-      text: pluginApi?.tr("news.settings.title") || "News Settings"
-      pointSize: Style.fontSizeL
-      font.weight: Font.Medium
-      color: Color.mOnSurface
-    }
-
-    Item { Layout.fillWidth: true }
-  }
-
-  Rectangle {
-    Layout.fillWidth: true
-    Layout.preferredHeight: 1
-    color: Color.mOutline
-  }
-
-  // API Key Section
-  NLabel {
-    label: pluginApi?.tr("news.settings.api-key") || "API Key"
-    description: pluginApi?.tr("news.settings.api-key-desc") || "Get your free API key from newsapi.org"
-  }
-
   NTextInput {
-    id: apiKeyField
-    Layout.fillWidth: true
-    placeholderText: "YOUR_API_KEY_HERE"
-    text: root.apiKey
-    onTextChanged: {
-      root.apiKey = text;
-      root.saveSettings();
-    }
+    label: "API Key"
+    description: "Get your free API key from newsapi.org/register"
+    text: apiKeyValue
+    onTextChanged: apiKeyValue = text
+    onEditingFinished: saveSettings()
+  }
 
   NButton {
-    text: pluginApi?.tr("news.settings.get-api-key") || "Get API Key"
+    text: "Get API Key"
     icon: "external-link"
     onClicked: Qt.openUrlExternally("https://newsapi.org/register")
   }
 
-  Rectangle {
-    Layout.fillWidth: true
-    Layout.preferredHeight: 1
-    color: Color.mOutline
-    Layout.topMargin: Style.marginS
-    Layout.bottomMargin: Style.marginS
-  }
-
-  // News Settings
-  NLabel {
-    label: pluginApi?.tr("news.settings.news-settings") || "News Settings"
-  }
-
-  // Country
-  NLabel {
-    label: pluginApi?.tr("news.settings.country") || "Country"
+  NComboBox {
+    label: "Country"
     description: "Select which country's news to display"
+    minimumWidth: 200
+    model: [
+      { "key": "us", "name": "United States" },
+      { "key": "gb", "name": "United Kingdom" },
+      { "key": "ca", "name": "Canada" },
+      { "key": "au", "name": "Australia" },
+      { "key": "de", "name": "Germany" },
+      { "key": "fr", "name": "France" },
+      { "key": "it", "name": "Italy" },
+      { "key": "jp", "name": "Japan" },
+      { "key": "kr", "name": "South Korea" },
+      { "key": "in", "name": "India" }
+    ]
+    currentKey: countryValue
+    onSelected: key => {
+      countryValue = key;
+      saveSettings();
+    }
   }
 
   NComboBox {
-    id: countryCombo
-    Layout.fillWidth: true
-    model: ["United States", "United Kingdom", "Canada", "Australia", "Germany", "France", "Italy", "Japan", "South Korea", "India"]
-    
-    property var countryValues: ["us", "gb", "ca", "au", "de", "fr", "it", "jp", "kr", "in"]
-    
-    Component.onCompleted: {
-      var idx = countryValues.indexOf(root.country);
-      currentIndex = idx >= 0 ? idx : 0;
-    }
-    
-    onCurrentIndexChanged: {
-      if (currentIndex >= 0 && currentIndex < countryValues.length) {
-        root.country = countryValues[currentIndex];
-        root.saveSettings();
-      }
-    }
-  }
-
-  // Category
-  NLabel {
-    label: pluginApi?.tr("news.settings.category") || "Category"
+    label: "Category"
     description: "Filter news by category"
-  }
-
-  NComboBox {
-    id: categoryCombo
-    Layout.fillWidth: true
-    model: ["General", "Business", "Entertainment", "Health", "Science", "Sports", "Technology"]
-    
-    property var categoryValues: ["general", "business", "entertainment", "health", "science", "sports", "technology"]
-    
-    Component.onCompleted: {
-      var idx = categoryValues.indexOf(root.category);
-      currentIndex = idx >= 0 ? idx : 0;
+    minimumWidth: 200
+    model: [
+      { "key": "general", "name": "General" },
+      { "key": "business", "name": "Business" },
+      { "key": "entertainment", "name": "Entertainment" },
+      { "key": "health", "name": "Health" },
+      { "key": "science", "name": "Science" },
+      { "key": "sports", "name": "Sports" },
+      { "key": "technology", "name": "Technology" }
+    ]
+    currentKey: categoryValue
+    onSelected: key => {
+      categoryValue = key;
+      saveSettings();
     }
-    
-    onCurrentIndexChanged: {
-      if (currentIndex >= 0 && currentIndex < categoryValues.length) {
-        root.category = categoryValues[currentIndex];
-        root.saveSettings();
-      }
-    }
-  }
-
-  // Refresh Interval
-  NLabel {
-    label: pluginApi?.tr("news.settings.refresh-interval") || "Refresh Interval"
-    description: "Check for new headlines every " + root.refreshInterval + " minutes"
   }
 
   NSpinBox {
-    id: refreshIntervalSpinBox
-    Layout.fillWidth: true
+    label: "Refresh Interval"
+    description: "Check for new headlines every " + refreshIntervalValue + " minutes"
     from: 5
     to: 1440
-    value: root.refreshInterval
     stepSize: 5
-    
-    onValueModified: {
-      root.refreshInterval = value;
-      root.saveSettings();
+    value: refreshIntervalValue
+    onValueChanged: {
+      refreshIntervalValue = value;
+      saveSettings();
     }
   }
 
-  // Max Headlines
-  NLabel {
-    label: pluginApi?.tr("news.settings.max-headlines") || "Max Headlines"
-    description: "Maximum number of headlines to display"
-  }
-
   NSpinBox {
-    id: maxHeadlinesSpinBox
-    Layout.fillWidth: true
+    label: "Max Headlines"
+    description: "Maximum number of headlines to display"
     from: 1
     to: 100
-    value: root.maxHeadlines
-    
-    onValueModified: {
-      root.maxHeadlines = value;
-      root.saveSettings();
+    value: maxHeadlinesValue
+    onValueChanged: {
+      maxHeadlinesValue = value;
+      saveSettings();
     }
   }
 
-  // Widget Width
-  NLabel {
-    label: pluginApi?.tr("news.settings.widget-width") || "Widget Width"
-    description: root.widgetWidth + " pixels"
-  }
-
   NSpinBox {
-    id: widgetWidthSpinBox
-    Layout.fillWidth: true
+    label: "Widget Width"
+    description: "Widget width in pixels: " + widgetWidthValue + "px"
     from: 100
     to: 1000
-    value: root.widgetWidth
     stepSize: 10
-    
-    onValueModified: {
-      root.widgetWidth = value;
-      root.saveSettings();
+    value: widgetWidthValue
+    onValueChanged: {
+      widgetWidthValue = value;
+      saveSettings();
     }
-  }
-
-  // Scroll Speed
-  NLabel {
-    label: pluginApi?.tr("news.settings.rolling-speed") || "Scroll Speed"
-    description: root.rollingSpeed + " ms per pixel (lower = faster)"
   }
 
   NSpinBox {
-    id: rollingSpeedSpinBox
-    Layout.fillWidth: true
+    label: "Scroll Speed"
+    description: "Time in ms per pixel (lower = faster): " + rollingSpeedValue + "ms"
     from: 10
     to: 200
-    value: root.rollingSpeed
     stepSize: 10
-    
-    onValueModified: {
-      root.rollingSpeed = value;
-      root.saveSettings();
+    value: rollingSpeedValue
+    onValueChanged: {
+      rollingSpeedValue = value;
+      saveSettings();
     }
-  }
-
-  Rectangle {
-    Layout.fillWidth: true
-    Layout.preferredHeight: 1
-    color: Color.mOutline
-    Layout.topMargin: Style.marginS
-    Layout.bottomMargin: Style.marginS
-  }
-
-  // Info
-  RowLayout {
-    Layout.fillWidth: true
-    spacing: Style.marginS
-
-    NIcon {
-      icon: "info"
-      pointSize: Style.fontSizeM
-      color: Color.mPrimary
-    }
-
-    NText {
-      text: pluginApi?.tr("news.settings.info") || "About NewsAPI"
-      pointSize: Style.fontSizeM
-      font.weight: Font.Medium
-      color: Color.mOnSurface
-    }
-  }
-
-  NText {
-    text: pluginApi?.tr("news.settings.info-text") || "NewsAPI provides news from over 80,000 sources worldwide. The free tier allows 100 requests per day. News updates automatically based on your refresh interval."
-    pointSize: Style.fontSizeXS
-    color: Color.mOnSurfaceVariant
-    wrapMode: Text.Wrap
-    Layout.fillWidth: true
   }
 }
