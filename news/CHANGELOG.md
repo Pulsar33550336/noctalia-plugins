@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.3] - 2026-02-15
+
+### Fixed
+- Fixed emoji icons rendering as rectangles by adding font family (Noto Color Emoji)
+- Fixed panel not showing news data by syncing after panel opens
+- Added Qt.callLater to ensure panel instance exists before syncing
+
 ## [1.1.2] - 2026-02-15
 
 ### Fixed

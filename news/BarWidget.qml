@@ -212,6 +212,7 @@ Item {
       // News icon
       Text {
         text: "📰"
+        font.family: "Noto Color Emoji, sans-serif"
         font.pointSize: root.barFontSize * 1.2
         color: mouseArea.containsMouse ? Color.mOnHover : Color.mOnSurface
         Layout.alignment: Qt.AlignVCenter
@@ -271,6 +272,7 @@ Item {
       // Refresh button
       Text {
         text: "🔄"
+        font.family: "Noto Color Emoji, sans-serif"
         font.pointSize: root.barFontSize * 0.9
         color: refreshMouseArea.containsMouse ? Color.mPrimary : (mouseArea.containsMouse ? Color.mOnHover : Color.mOnSurface)
         Layout.alignment: Qt.AlignVCenter
@@ -296,6 +298,7 @@ Item {
 
       Text {
         text: "📰"
+        font.family: "Noto Color Emoji, sans-serif"
         font.pointSize: root.barFontSize * 1.2
         color: mouseArea.containsMouse ? Color.mOnHover : Color.mOnSurface
         Layout.alignment: Qt.AlignHCenter
@@ -321,9 +324,10 @@ Item {
 
     onClicked: (mouse) => {
       if (mouse.button === Qt.LeftButton) {
-        // Open panel
+        // Open panel and sync data after a short delay
         if (pluginApi) {
           pluginApi.openPanel(root.screen, root);
+          Qt.callLater(syncToPanel);
         }
       } else if (mouse.button === Qt.RightButton) {
         // Open settings on right click
