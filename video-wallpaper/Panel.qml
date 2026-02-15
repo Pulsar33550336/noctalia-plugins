@@ -29,7 +29,7 @@ Item {
     readonly property bool   enabled:          pluginApi?.pluginSettings?.enabled          || false
     readonly property bool   monitorSpecific:  pluginApi?.pluginSettings?.monitorSpecific  || false
     readonly property bool   thumbCacheReady:  pluginApi?.pluginSettings?.thumbCacheReady  || false
-    readonly property string wallpapersFolder: pluginApi?.pluginSettings?.wallpapersFolder || pluginApi?.manifest?.metadata?.defaultSettings.wallpapersFolder || ""
+    readonly property string wallpapersFolder: pluginApi?.pluginSettings?.wallpapersFolder || pluginApi?.manifest?.metadata?.defaultSettings?.wallpapersFolder || ""
 
 
     /***************************
@@ -107,6 +107,8 @@ Item {
                     tooltipText: root.pluginApi?.tr("panel.tool_row.monitor_specific.tooltip") ||  "Enable / disable the monitor specific setting."
 
                     hot: root.monitorSpecific
+
+                    visible: Quickshell.screens.length > 1
 
                     onClicked: {
                         if (root.pluginApi == null) return
