@@ -57,7 +57,7 @@ Item {
               Layout.fillWidth: true
             }
 
-            NIcon {
+            NIconButton {
               icon: "x"
               tooltipText: "Close"
               baseSize: Style.baseWidgetSize * 0.8
