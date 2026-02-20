@@ -322,7 +322,7 @@ Item {
     }
   }
 
-  Component.onCompleted {
+  Component.onCompleted: {
     // Only fetch if API key is already available
     if (apiKey && apiKey !== "YOUR_API_KEY_HERE") {
       fetchNews();
