@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.6] - 2026-02-20
+
+### Fixed
+- Fixed refresh button not being clickable due to overlapping MouseAreas
+- Moved main MouseArea inside Rectangle for proper event handling
+- Added z-index to refresh button to ensure it's above other elements
+
+## [1.1.5] - 2026-02-20
+
+### Fixed
+- Fixed Main singleton access via pluginApi.mainInstance instead of direct import
+- Added null safety checks for main and main.newsData throughout
+- Fixed panel close button to use pluginApi.closePanel() instead of PanelService
+
+## [1.1.4] - 2026-02-20
+
+### Fixed
+- Fixed panel not displaying news by moving shared state to Main singleton
+- BarWidget now stores data in Main instead of local properties
+- Panel reads data from Main singleton for proper synchronization
+- Removed defunct syncToPanel() mechanism
+
 ## [1.1.3] - 2026-02-15
 
 ### Fixed
