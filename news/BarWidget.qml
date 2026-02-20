@@ -190,6 +190,41 @@ Item {
     border.color: Style.capsuleBorderColor
     border.width: Style.capsuleBorderWidth
 
+    // Mouse interaction for main area (not refresh button)
+    MouseArea {
+      id: mouseArea
+      anchors.fill: parent
+      hoverEnabled: true
+      cursorShape: Qt.PointingHandCursor
+      acceptedButtons: Qt.LeftButton | Qt.RightButton
+      propagateComposedEvents: true
+
+      onClicked: (mouse) => {
+        if (mouse.button === Qt.LeftButton) {
+          // Open panel
+          if (pluginApi) {
+            pluginApi.openPanel(root.screen, root);
+          }
+        } else if (mouse.button === Qt.RightButton) {
+          // Open settings on right click
+          if (pluginApi) {
+            BarService.openPluginSettings(root.screen, pluginApi.manifest);
+          }
+        }
+      }
+
+      onEntered: {
+        var tooltip = (main && main.newsData && main.newsData.length > 0)
+          ? main.newsData.length + " headlines\nLeft-click to view • Right-click for settings"
+          : "Left-click to view • Right-click for settings";
+        TooltipService.show(root, tooltip, BarService.getTooltipDirection());
+      }
+
+      onExited: {
+        TooltipService.hide();
+      }
+    }
+
     // Horizontal layout
     RowLayout {
       anchors.fill: parent
@@ -266,6 +301,7 @@ Item {
         font.pointSize: root.barFontSize * 0.9
         color: refreshMouseArea.containsMouse ? Color.mPrimary : (mouseArea.containsMouse ? Color.mOnHover : Color.mOnSurface)
         Layout.alignment: Qt.AlignVCenter
+        z: 10  // Ensure button is above main mouseArea
 
         MouseArea {
           id: refreshMouseArea
@@ -304,41 +340,7 @@ Item {
     }
   }
 
-  // Mouse interaction
-  MouseArea {
-    id: mouseArea
-    anchors.fill: parent
-    hoverEnabled: true
-    cursorShape: Qt.PointingHandCursor
-    acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-    onClicked: (mouse) => {
-      if (mouse.button === Qt.LeftButton) {
-        // Open panel
-        if (pluginApi) {
-          pluginApi.openPanel(root.screen, root);
-        }
-      } else if (mouse.button === Qt.RightButton) {
-        // Open settings on right click
-        if (pluginApi) {
-          BarService.openPluginSettings(root.screen, pluginApi.manifest);
-        }
-      }
-    }
-
-    onEntered: {
-      var tooltip = (main && main.newsData && main.newsData.length > 0)
-        ? main.newsData.length + " headlines\nLeft-click to view • Right-click for settings"
-        : "Left-click to view • Right-click for settings";
-      TooltipService.show(root, tooltip, BarService.getTooltipDirection());
-    }
-
-    onExited: {
-      TooltipService.hide();
-    }
-  }
-
-  Component.onCompleted: {
+  Component.onCompleted {
     // Only fetch if API key is already available
     if (apiKey && apiKey !== "YOUR_API_KEY_HERE") {
       fetchNews();
