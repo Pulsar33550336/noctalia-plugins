@@ -84,7 +84,7 @@ Item {
   // Watch for when pluginApi becomes available
   onPluginApiChanged: {
     if (pluginApi && apiKey && apiKey !== "YOUR_API_KEY_HERE") {
-      console.log("[News Plugin] PluginApi loaded, API key:", apiKey ? "configured" : "not configured");
+      Logger.i("[News Plugin] PluginApi loaded, API key:", apiKey ? "configured" : "not configured");
       Qt.callLater(fetchNews);
     }
   }
@@ -102,7 +102,7 @@ Item {
 
   // Fetch news when API key becomes available
   onApiKeyChanged: {
-    console.log("[News Plugin] API key changed:", apiKey ? "configured" : "not configured");
+    Logger.i("[News Plugin] API key changed:", apiKey ? "configured" : "not configured");
     if (apiKey && apiKey !== "YOUR_API_KEY_HERE") {
       Qt.callLater(fetchNews);
     }
@@ -134,7 +134,7 @@ Item {
     if (!apiKey || apiKey === "YOUR_API_KEY_HERE") {
       main.errorMessage = "API key not configured"
       main.isLoading = false
-      console.log("[News Plugin] Error: API key not configured")
+      Logger.i("[News Plugin] Error: API key not configured")
       return
     }
 
@@ -154,46 +154,46 @@ Item {
               "&pageSize=" + maxHeadlines +
               "&apiKey=" + apiKey
 
-    console.log("[News Plugin] Fetching headlines - Language:", lang, "Category:", category)
+    Logger.i("[News Plugin] Fetching headlines - Language:", lang, "Category:", category)
 
     xhr.onreadystatechange = function() {
       if (xhr.readyState === XMLHttpRequest.DONE) {
-        console.log("[News Plugin] Response received - Status:", xhr.status)
+        Logger.i("[News Plugin] Response received - Status:", xhr.status)
 
         if (xhr.status === 200) {
           try {
             var response = JSON.parse(xhr.responseText)
             if (response.status === "ok" && response.articles) {
-              console.log("[News Plugin] Success: Fetched", response.articles.length, "articles")
+              Logger.i("[News Plugin] Success: Fetched", response.articles.length, "articles")
               main.newsData = response.articles.slice(0, maxHeadlines)
               main.isLoading = false
               main.errorMessage = ""
             } else {
               main.errorMessage = response.message || "API error"
               main.isLoading = false
-              console.log("[News Plugin] API Error:", response.message || "Unknown error")
+              Logger.i("[News Plugin] API Error:", response.message || "Unknown error")
             }
           } catch (e) {
             main.errorMessage = "Failed to parse response"
             main.isLoading = false
-            console.log("[News Plugin] Parse Error:", e.toString())
+            Logger.i("[News Plugin] Parse Error:", e.toString())
           }
         } else if (xhr.status === 401) {
           main.errorMessage = "Invalid API key"
           main.isLoading = false
-          console.log("[News Plugin] Error: Invalid API key (401)")
+          Logger.i("[News Plugin] Error: Invalid API key (401)")
         } else if (xhr.status === 429) {
           main.errorMessage = "Rate limit exceeded"
           main.isLoading = false
-          console.log("[News Plugin] Error: Rate limit exceeded (429)")
+          Logger.i("[News Plugin] Error: Rate limit exceeded (429)")
         } else if (xhr.status === 0) {
           main.errorMessage = "Network error"
           main.isLoading = false
-          console.log("[News Plugin] Error: Network error or CORS issue (0)")
+          Logger.i("[News Plugin] Error: Network error or CORS issue (0)")
         } else {
           main.errorMessage = "HTTP error " + xhr.status
           main.isLoading = false
-          console.log("[News Plugin] Error: HTTP", xhr.status)
+          Logger.i("[News Plugin] Error: HTTP", xhr.status)
         }
       }
     }

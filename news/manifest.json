@@ -7,6 +7,7 @@
   "license": "MIT",
   "repository": "https://github.com/noctalia-dev/noctalia-plugins",
   "description": "Display scrolling news headlines from various sources using NewsAPI.org",
+  "tags": ["Bar", "Panel", "Network"],
   "entryPoints": {
     "main": "Main.qml",
     "barWidget": "BarWidget.qml",

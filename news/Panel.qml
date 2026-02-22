@@ -284,7 +284,7 @@ Item {
 
                         NText {
                           visible: modelData.source && modelData.source.name
-                          text: (modelData.source?.name || "") + (modelData.publishedAt ? " • " + formatTime(modelData.publishedAt) : "")
+                          text: (modelData.source?.name || "") + (modelData.publishedAt ? " • " + formatRelativeTime(modelData.publishedAt) : "")
                           pointSize: Style.fontSizeXXS
                           color: Color.mSecondary
                           Layout.fillWidth: true
@@ -322,18 +322,21 @@ Item {
     }
   }
 
-  function formatTime(isoString) {
+  function formatRelativeTime(isoString) {
+    if (!isoString) return ""
+    
     try {
       var date = new Date(isoString)
       var now = new Date()
       var diffMs = now - date
-      var diffMins = Math.floor(diffMs / 60000)
+      var diffMin = Math.floor(diffMs / 60000)
+      var diffHour = Math.floor(diffMin / 60)
+      var diffDay = Math.floor(diffHour / 24)
       
-      if (diffMins < 60) return diffMins + "m ago"
-      var diffHours = Math.floor(diffMins / 60)
-      if (diffHours < 24) return diffHours + "h ago"
-      var diffDays = Math.floor(diffHours / 24)
-      if (diffDays < 7) return diffDays + "d ago"
+      if (diffMin < 1) return "just now"
+      if (diffMin < 60) return diffMin + "m ago"
+      if (diffHour < 24) return diffHour + "h ago"
+      if (diffDay < 30) return diffDay + "d ago"
       
       return date.toLocaleDateString()
     } catch (e) {
