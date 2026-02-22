@@ -329,14 +329,14 @@ Item {
       var date = new Date(isoString)
       var now = new Date()
       var diffMs = now - date
-      var diffMin = Math.floor(diffMs / 60000)
-      var diffHour = Math.floor(diffMin / 60)
-      var diffDay = Math.floor(diffHour / 24)
+      var diffMins = Math.floor(diffMs / 60000)
+      var diffHours = Math.floor(diffMs / 3600000)
+      var diffDays = Math.floor(diffMs / 86400000)
       
-      if (diffMin < 1) return "just now"
-      if (diffMin < 60) return diffMin + "m ago"
-      if (diffHour < 24) return diffHour + "h ago"
-      if (diffDay < 30) return diffDay + "d ago"
+      if (diffMins < 1) return pluginApi?.tr("widget.timeNow", "now") || "now"
+      if (diffMins < 60) return (pluginApi?.tr("widget.timeMinutes", "%1min ago") || "%1min ago").replace("%1", diffMins)
+      if (diffHours < 24) return (pluginApi?.tr("widget.timeHours", "%1h ago") || "%1h ago").replace("%1", diffHours)
+      if (diffDays < 7) return (pluginApi?.tr("widget.timeDays", "%1d ago") || "%1d ago").replace("%1", diffDays)
       
       return date.toLocaleDateString()
     } catch (e) {

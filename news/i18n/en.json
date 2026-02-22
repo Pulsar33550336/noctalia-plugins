@@ -20,5 +20,9 @@
   "news.error.api-key": "API key not configured",
   "news.error.invalid-key": "Invalid API key",
   "news.error.rate-limit": "Rate limit exceeded",
-  "news.error.network": "Network error"
+  "news.error.network": "Network error",
+  "widget.timeNow": "now",
+  "widget.timeMinutes": "%1min ago",
+  "widget.timeHours": "%1h ago",
+  "widget.timeDays": "%1d ago"
 }
