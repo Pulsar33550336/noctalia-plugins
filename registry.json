@@ -372,7 +372,7 @@
       "lastUpdated": "2026-01-26T23:59:29-05:00"
     },
     {
-      "id": "model-usage-bar-widget",
+      "id": "model-usage",
       "name": "Model Usage",
       "version": "0.2.0",
       "official": false,
@@ -386,7 +386,7 @@
         "Productivity",
         "AI"
       ],
-      "lastUpdated": "2026-02-22T10:32:24-06:00"
+      "lastUpdated": "2026-02-25T19:27:50-06:00"
     },
     {
       "id": "mpris-lyric",
