@@ -13,7 +13,7 @@ Install from the plugin marketplace. You also need to install the following pack
 | Google Lens | `xdg-open`, `jq` |
 | Screen Recording | `wf-recorder` |
 
-This plugin currently only supports Hyprland. Window selection and screen recording may not be available on other window managers.
+This plugin currently only supports Hyprland. Window selection may not be available on other window managers.
 
 ## Usage
 
@@ -46,7 +46,7 @@ target plugin:screen-shot-and-record
 
 ## Settings
 
-This plugin has the following configuration options:
+This plugin has the following configuration options::
 
 | Name | Default | Description |
 | :-: | :-: | :-: |
