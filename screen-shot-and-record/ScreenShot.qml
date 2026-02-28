@@ -147,8 +147,6 @@ PanelWindow {
         return null;
     }
 
-    // signal closed()
-
     function processRegion(x, y, width, height, mode) {
         // 获取显示器名称并清理
         var outputName = root.screen ? root.screen.name : "unknown"

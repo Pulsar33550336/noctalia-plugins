@@ -21,11 +21,6 @@ Item {
 
   anchors.fill: parent
 
-  Rectangle {
-    id: panelContainer
-    anchors.fill: parent
-    color: "transparent"
-
     NBox {
         Layout.fillWidth: true
         Layout.fillHeight: true
@@ -118,5 +113,4 @@ Item {
             }
         }
     }
-  }
 }
