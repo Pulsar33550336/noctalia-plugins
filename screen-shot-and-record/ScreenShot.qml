@@ -53,6 +53,16 @@ PanelWindow {
 
         onExited: (code, status) => {
             if (code === 0) {
+
+                if (root.recording && (root.target === "record" || root.target === "recordsound")){
+                    if (root.recording) {
+                        Logger.d("ScreenShot", `bash '` + pluginApi.pluginDir + `/record.sh'`)
+                        Quickshell.execDetached(["bash", pluginApi.pluginDir + "/record.sh"])
+                        root.visible = false
+                        root.closed()
+                    }
+                }
+
                 Logger.d("ScreenShot", "[RegionSelector] Full Screen Shot saved to %1".arg(filename))
                 root.visible = true
             } else {
@@ -95,23 +105,24 @@ PanelWindow {
         }
     }
 
+    property bool recording: false
+
     Process {
         id: checkRecordingProc
         command: ["pidof", "wf-recorder"]
         running: false
         onExited: (exitCode) => {
             if (exitCode === 0) {
-                Logger.d("ScreenShot", `bash '` + pluginApi.pluginDir + `/record.sh'`)
-                Quickshell.execDetached(["bash", pluginApi.pluginDir + "/record.sh"])
-                root.visible = false
-                root.closed()
+                root.recording = true
             }
         }
     }
 
     function startCapture() {
         checkRecordingProc.running = true
-        screenshotProc.running = true
+        if (!(root.target === "record" || root.target === "recordsound")) {
+            screenshotProc.running = true
+        }
         hyprctlProc.running = pluginApi?.pluginSettings?.enableWindowsSelection
                               ?? pluginApi?.manifest?.metadata?.defaultSettings?.enableWindowsSelection
                               ?? true
@@ -187,6 +198,8 @@ PanelWindow {
             Logger.d("ScreenShot", "[Panel] Executing ocr command:", ocrCmd)
             Quickshell.execDetached(["sh", "-c", ocrCmd])
         } else if (root.target === "record" || root.target === "recordsound") {
+
+
             const scriptPath = pluginApi.pluginDir + '/record.sh'
 
             const globalX = Math.round((x + root.monitorOffsetX))

@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import qs.Commons
 import qs.Widgets
 import Quickshell.Io
+import qs.Services.UI
 
 Item {
   id: root
@@ -23,6 +24,14 @@ Item {
   anchors.fill: parent
 
   property bool recording: false
+
+  property string target: ""
+
+  Component.onDestruction: {
+    if (target != ""){
+      mainInstance?.open(target)
+    }
+  }
 
     Process {
         id: checkRecordingProc
@@ -82,7 +91,7 @@ Item {
                   textColor: Color.mOnPrimary
                   Layout.fillWidth: true
                   onClicked: {
-                      mainInstance?.open("screenshot")
+                      root.target = "screenshot"
                       pluginApi.closePanel(pluginApi.panelOpenScreen)
                   }
               }
@@ -93,7 +102,7 @@ Item {
                   textColor: Color.mOnPrimary
                   Layout.fillWidth: true
                   onClicked: {
-                      mainInstance?.open("ocr")
+                      root.target = "ocr"
                       pluginApi.closePanel(pluginApi.panelOpenScreen)
                   }
               }
@@ -104,7 +113,7 @@ Item {
                   textColor: Color.mOnPrimary
                   Layout.fillWidth: true
                   onClicked: {
-                      mainInstance?.open("search")
+                      root.target = "search"
                       pluginApi.closePanel(pluginApi.panelOpenScreen)
                   }
               }
@@ -116,7 +125,7 @@ Item {
                   Layout.fillWidth: true
                   visible: !root.recording
                   onClicked: {
-                      mainInstance?.open("record")
+                      root.target = "record"
                       pluginApi.closePanel(pluginApi.panelOpenScreen)
                   }
               }
@@ -128,7 +137,7 @@ Item {
                   Layout.fillWidth: true
                   visible: !root.recording
                   onClicked: {
-                      mainInstance?.open("recordsound")
+                      root.target = "recordsound"
                       pluginApi.closePanel(pluginApi.panelOpenScreen)
                   }
               }
