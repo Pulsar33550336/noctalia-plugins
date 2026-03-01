@@ -7,7 +7,8 @@
             "search": "图像搜索",
             "record": "录屏",
             "recordsound": "录屏（有声音）",
-            "bug": "为什么会变成这样呢"
+            "bug": "为什么会变成这样呢",
+            "stop": "停止录屏"
         }
     },
     "settings": {

@@ -63,7 +63,7 @@ ColumnLayout {
             }
             currentKey: root.screenshotEditor
             onSelected: key => {
-                Logger.d("ScreenShot", (key)
+                Logger.d("ScreenShot", (key))
                 root.screenshotEditor = key;
             }
         }

@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import qs.Commons
 import qs.Widgets
+import Quickshell.Io
 
 Item {
   id: root
@@ -14,103 +15,136 @@ Item {
   readonly property bool allowAttach: true
 
   // Preferred dimensions
-  property real contentPreferredWidth: 180 * Style.uiScaleRatio
-  property real contentPreferredHeight: 300 * Style.uiScaleRatio
+  property real contentPreferredWidth: panelContainer.implicitWidth + Style.marginM * 2
+  property real contentPreferredHeight: panelContainer.implicitHeight + Style.marginM * 2
 
   property var mainInstance: pluginApi?.mainInstance
 
   anchors.fill: parent
 
-    NBox {
-        Layout.fillWidth: true
-        Layout.fillHeight: true
-        anchors.fill: parent
-        anchors.margins: Style.marginM
+  property bool recording: false
 
-        ColumnLayout {
-            anchors.fill: parent
-            spacing: Style.marginM
-            anchors.margins: Style.marginM
-
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: Style.marginS
-
-                NIcon {
-                    icon: "screenshot"
-                    pointSize: Style.fontSizeL
-                    color: Color.mPrimary
-                }
-
-                NText {
-                    text: pluginApi?.tr("panel.title") || "Screenshot"
-                    pointSize: Style.fontSizeL
-                    font.weight: Style.fontWeightBold
-                    color: Color.mOnSurface
-                    Layout.fillWidth: true
-                }
-            }
-
-            NButton {
-                icon: "screenshot"
-                text: pluginApi?.tr("panel.target.screenshot") || "Screenshot"
-                backgroundColor: Color.mPrimary
-                textColor: Color.mOnPrimary
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignVCenter
-                onClicked: {
-                    mainInstance?.open("screenshot")
-                    pluginApi.closePanel(pluginApi.panelOpenScreen)
-                }
-            }
-            NButton {
-                icon: "text-recognition"
-                text: pluginApi?.tr("panel.target.ocr") || "OCR"
-                backgroundColor: Color.mPrimary
-                textColor: Color.mOnPrimary
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignVCenter
-                onClicked: {
-                    mainInstance?.open("ocr")
-                    pluginApi.closePanel(pluginApi.panelOpenScreen)
-                }
-            }
-            NButton {
-                icon: "photo-search"
-                text: pluginApi?.tr("panel.target.search") || "Image Search"
-                backgroundColor: Color.mPrimary
-                textColor: Color.mOnPrimary
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignVCenter
-                onClicked: {
-                    mainInstance?.open("search")
-                    pluginApi.closePanel(pluginApi.panelOpenScreen)
-                }
-            }
-            NButton {
-                icon: "camera"
-                text: pluginApi?.tr("panel.target.record") || "Screen Recording"
-                backgroundColor: Color.mPrimary
-                textColor: Color.mOnPrimary
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignVCenter
-                onClicked: {
-                    mainInstance?.open("record")
-                    pluginApi.closePanel(pluginApi.panelOpenScreen)
-                }
-            }
-            NButton {
-                icon: "camera-spark"
-                text: pluginApi?.tr("panel.target.recordsound") || "Screen Recording (with Audio)"
-                backgroundColor: Color.mPrimary
-                textColor: Color.mOnPrimary
-                Layout.fillWidth: true
-                Layout.alignment: Qt.AlignVCenter
-                onClicked: {
-                    mainInstance?.open("recordsound")
-                    pluginApi.closePanel(pluginApi.panelOpenScreen)
-                }
+    Process {
+        id: checkRecordingProc
+        command: ["pidof", "wf-recorder"]
+        running: true
+        onExited: (exitCode) => {
+            if (exitCode === 0) {
+                root.recording = true;
             }
         }
     }
+
+  NBox {
+      id: panelContainer
+
+      anchors.centerIn: parent
+
+      implicitWidth: Math.max(titleRow.implicitWidth, buttonColumn.implicitWidth) + Style.marginM * 2
+      implicitHeight: mainLayout.implicitHeight + Style.marginM * 2
+
+      ColumnLayout {
+          id: mainLayout
+          anchors.fill: parent
+          anchors.margins: Style.marginM
+          spacing: Style.marginM
+
+          RowLayout {
+              id: titleRow
+              Layout.fillWidth: true
+              spacing: Style.marginS
+
+              NIcon {
+                  icon: "screenshot"
+                  pointSize: Style.fontSizeL
+                  color: Color.mPrimary
+              }
+
+              NText {
+                  text: pluginApi?.tr("panel.title") || "Screenshot"
+                  pointSize: Style.fontSizeL
+                  font.weight: Style.fontWeightBold
+                  color: Color.mOnSurface
+                  Layout.fillWidth: true
+                  wrapMode: Text.WordWrap
+              }
+          }
+
+          ColumnLayout {
+              id: buttonColumn
+              Layout.fillWidth: true
+              spacing: Style.marginS
+
+              NButton {
+                  icon: "screenshot"
+                  text: pluginApi?.tr("panel.target.screenshot") || "Screenshot"
+                  backgroundColor: Color.mPrimary
+                  textColor: Color.mOnPrimary
+                  Layout.fillWidth: true
+                  onClicked: {
+                      mainInstance?.open("screenshot")
+                      pluginApi.closePanel(pluginApi.panelOpenScreen)
+                  }
+              }
+              NButton {
+                  icon: "text-recognition"
+                  text: pluginApi?.tr("panel.target.ocr") || "OCR"
+                  backgroundColor: Color.mPrimary
+                  textColor: Color.mOnPrimary
+                  Layout.fillWidth: true
+                  onClicked: {
+                      mainInstance?.open("ocr")
+                      pluginApi.closePanel(pluginApi.panelOpenScreen)
+                  }
+              }
+              NButton {
+                  icon: "photo-search"
+                  text: pluginApi?.tr("panel.target.search") || "Image Search"
+                  backgroundColor: Color.mPrimary
+                  textColor: Color.mOnPrimary
+                  Layout.fillWidth: true
+                  onClicked: {
+                      mainInstance?.open("search")
+                      pluginApi.closePanel(pluginApi.panelOpenScreen)
+                  }
+              }
+              NButton {
+                  icon: "camera"
+                  text: pluginApi?.tr("panel.target.record") || "Screen Recording"
+                  backgroundColor: Color.mPrimary
+                  textColor: Color.mOnPrimary
+                  Layout.fillWidth: true
+                  visible: !root.recording
+                  onClicked: {
+                      mainInstance?.open("record")
+                      pluginApi.closePanel(pluginApi.panelOpenScreen)
+                  }
+              }
+              NButton {
+                  icon: "camera-spark"
+                  text: pluginApi?.tr("panel.target.recordsound") || "Screen Recording (with Audio)"
+                  backgroundColor: Color.mPrimary
+                  textColor: Color.mOnPrimary
+                  Layout.fillWidth: true
+                  visible: !root.recording
+                  onClicked: {
+                      mainInstance?.open("recordsound")
+                      pluginApi.closePanel(pluginApi.panelOpenScreen)
+                  }
+              }
+              NButton {
+                  icon: "close"
+                  text: pluginApi?.tr("panel.target.stop") || "Stop Recording"
+                  backgroundColor: Color.mError
+                  textColor: Color.mOnError
+                  Layout.fillWidth: true
+                  visible: root.recording
+                  onClicked: {
+                      mainInstance?.open("record")
+                      pluginApi.closePanel(pluginApi.panelOpenScreen)
+                  }
+              }
+          }
+      }
+  }
 }
