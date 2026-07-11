@@ -23,15 +23,6 @@ NIconButton {
   readonly property string screenName: screen?.name ?? ""
   readonly property real capsuleHeight: Style.getCapsuleHeightForScreen(screenName)
 
-  Component.onCompleted: {
-  }
-
-  Component.onDestruction: {
-  }
-
-  onRecordingChanged: {
-  }
-
   // NIconButton configuration
   baseSize: capsuleHeight
   applyUiScale: false

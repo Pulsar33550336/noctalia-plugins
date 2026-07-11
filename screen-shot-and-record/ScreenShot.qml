@@ -35,16 +35,9 @@ PanelWindow {
     property string frozenSourceFile: ""
     property bool frozenSourceReady: false
 
-    Component.onCompleted: {
-    }
-
     Component.onDestruction: {
         freezeCaptureProc.running = false
         checkRecordingProc.running = false
-    }
-
-
-    onDraggingChanged: {
     }
 
     Process {
@@ -135,11 +128,6 @@ PanelWindow {
     property var targetMeta: root
     property var onNonRecordingStart: null
     property var resolveFallbackRegion: null
-
-    onRegionWidthChanged: {
-        if (root.dragging) {
-        }
-    }
 
     ScreenShotCaptureCommon {
         id: captureCommon

@@ -75,12 +75,6 @@ Item {
         Quickshell.execDetached(stopArgs)
     }
 
-    onActiveChanged: {
-    }
-
-    onRecordingActiveChanged: {
-    }
-
     function buildRecordingNotifyArgs() {
         return [
             "--notify-app", pluginApi?.tr("notify.app.recorder"),
