@@ -35,7 +35,6 @@ ScreenShot {
     }
 
     resolveFallbackRegion: () => {
-                 root.hoveredWindow ? JSON.stringify({x: root.hoveredWindow.x, y: root.hoveredWindow.y, w: root.hoveredWindow.width, h: root.hoveredWindow.height}) : "null")
         if (!root.hoveredWindow) {
             return null
         }
