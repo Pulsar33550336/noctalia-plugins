@@ -35,6 +35,7 @@ ScreenShot {
     }
 
     resolveFallbackRegion: () => {
+                 root.hoveredWindow ? JSON.stringify({x: root.hoveredWindow.x, y: root.hoveredWindow.y, w: root.hoveredWindow.width, h: root.hoveredWindow.height}) : "null")
         if (!root.hoveredWindow) {
             return null
         }
@@ -64,14 +65,19 @@ ScreenShot {
             }
         }
         onExited: (code) => {
+            Logger.d("ScreenShot", "[Hyprland] hyprctlProc onExited code=", code)
             if (code !== 0) {
                 root.windowRegions = []
+                Logger.w("ScreenShot", "[Hyprland] hyprctlProc failed, cleared windowRegions")
             }
         }
     }
 
     function extractHyprWindowRegions(clients) {
+        const clientCount = Array.isArray(clients) ? clients.length : 0
+
         if (!Array.isArray(clients)) {
+            Logger.w("ScreenShot", "[Hyprland] extractHyprWindowRegions: clients is not an array")
             return []
         }
 
@@ -80,7 +86,7 @@ ScreenShot {
         const workspaceId = Number(root.activeWorkspaceId)
         const monitorId = Number(root.hyprlandMonitor?.id ?? NaN)
 
-        return clients
+        const filtered = clients
             .filter(client => {
                 const isMapped = client?.mapped !== false
                 const isHidden = client?.hidden === true
@@ -102,6 +108,9 @@ ScreenShot {
 
                 return isMapped && !isHidden && onOutput
             })
+
+
+        const result = filtered
             .map(client => ({
                 x: Number(client?.at?.[0] ?? 0) - root.monitorOffsetX,
                 y: Number(client?.at?.[1] ?? 0) - root.monitorOffsetY,
@@ -112,6 +121,8 @@ ScreenShot {
                 address: String(client?.address ?? "")
             }))
             .filter(window => window.width > 0 && window.height > 0)
+
+        return result
     }
 
     function findWindowAt(x, y) {

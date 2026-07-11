@@ -23,6 +23,15 @@ NIconButton {
   readonly property string screenName: screen?.name ?? ""
   readonly property real capsuleHeight: Style.getCapsuleHeightForScreen(screenName)
 
+  Component.onCompleted: {
+  }
+
+  Component.onDestruction: {
+  }
+
+  onRecordingChanged: {
+  }
+
   // NIconButton configuration
   baseSize: capsuleHeight
   applyUiScale: false
@@ -40,6 +49,8 @@ NIconButton {
   onClicked: {
     if (pluginApi) {
       pluginApi.openPanel(root.screen, root)
+    } else {
+      Logger.w("ScreenShot", "[BarWidget] onClicked: no pluginApi!")
     }
   }
 

@@ -27,10 +27,20 @@ Item {
 
   property string target: ""
 
+  Component.onCompleted: {
+
+  }
+
   Component.onDestruction: {
     if (target != ""){
       mainInstance?.open(target)
     }
+  }
+
+  onRecordingChanged: {
+  }
+
+  onTargetChanged: {
   }
 
     Process {

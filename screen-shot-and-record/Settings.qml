@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import Quickshell
 import qs.Commons
 import qs.Widgets
+import qs.Services.Compositor
 
 ColumnLayout {
     id: root
@@ -35,6 +36,10 @@ ColumnLayout {
                                        ?? pluginApi?.manifest?.metadata?.defaultSettings?.recordingSavePath
                                        ?? (Quickshell.env("HOME") + "/Videos")
 
+    property bool notificationsEnabled: pluginApi?.pluginSettings?.notificationsEnabled
+                                        ?? pluginApi?.manifest?.metadata?.defaultSettings?.notificationsEnabled
+                                        ?? true
+
     property bool recordingNotifications: pluginApi?.pluginSettings?.recordingNotifications
                                           ?? pluginApi?.manifest?.metadata?.defaultSettings?.recordingNotifications
                                           ?? true
@@ -61,6 +66,13 @@ ColumnLayout {
         onToggled: (checked) => {
             root.enableWindowsSelection = checked
         }
+    }
+
+    NText {
+        Layout.fillWidth: true
+        text: pluginApi?.tr("settings.enableWindowsSelection.niriWarning")
+        color: "#ff4444"
+        visible: CompositorService.isNiri
     }
 
     RowLayout {
@@ -122,6 +134,16 @@ ColumnLayout {
 
     NToggle {
         Layout.fillWidth: true
+        label: pluginApi?.tr("settings.notificationsEnabled.label")
+        description: pluginApi?.tr("settings.notificationsEnabled.description")
+        checked: root.notificationsEnabled
+        onToggled: (checked) => {
+            root.notificationsEnabled = checked
+        }
+    }
+
+    NToggle {
+        Layout.fillWidth: true
         label: pluginApi?.tr("settings.recordingNotifications.label")
         description: pluginApi?.tr("settings.recordingNotifications.description")
         checked: root.recordingNotifications
@@ -162,6 +184,7 @@ ColumnLayout {
         pluginApi.pluginSettings.keepSourceScreenshot = root.keepSourceScreenshot
         pluginApi.pluginSettings.savePath = root.savePath
         pluginApi.pluginSettings.recordingSavePath = root.recordingSavePath
+        pluginApi.pluginSettings.notificationsEnabled = root.notificationsEnabled
         pluginApi.pluginSettings.recordingNotifications = root.recordingNotifications
         pluginApi.saveSettings()
     }
